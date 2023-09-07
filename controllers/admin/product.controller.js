@@ -1,42 +1,22 @@
 const Product = require("../../models/product.model");
 
+const filterStatusHelper = require("../../helpers/filterStatus");
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
-  // thuoc tinh class de truyen classCss vao
-  let filterStatus = [
-    {
-      name: "Tất cả",
-      status: "",
-      class: "",
-    },
-    {
-      name: "Hoạt động",
-      status: "active",
-      class: "",
-    },
-    {
-      name: "Dừng hoạt động",
-      status: "inactive",
-      class: "",
-    },
-  ];
+  // bộ lọc
+  const filterStatus = filterStatusHelper(req.query);
+  // hết bộ lọc
+
+  // dieu kien search DB
   let find = {
     deleted: false,
   };
 
   if (req.query.status) {
-    const index = filterStatus.findIndex(
-      (item) => item.status === req.query.status
-    );
-    filterStatus[index].class = "active";
-  } else {
-    filterStatus[0].class = "active";
-  }
-  if (req.query.status) {
-    // neu co query status => cho vao find.
     find.status = req.query.status;
   }
 
+  // phan tim kiem.
   let keyword = "";
   if (req.query.keyword) {
     keyword = req.query.keyword;
