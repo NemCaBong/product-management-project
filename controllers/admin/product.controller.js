@@ -1,8 +1,8 @@
 const Product = require("../../models/product.model");
 
 const filterStatusHelper = require("../../helpers/filterStatus");
-
 const searchHelper = require("../../helpers/search");
+const paginationHelper = require("../../helpers/pagination");
 // [GET] /admin/products
 module.exports.index = async (req, res) => {
   // bộ lọc
@@ -25,25 +25,11 @@ module.exports.index = async (req, res) => {
   }
   // het tim kiem
 
-  // phan phan trang
-  const objectPagination = {
-    currentPage: 1,
-    limitItems: 5,
-  };
-  if (req.query.page) {
-    objectPagination.currentPage = parseInt(req.query.page);
-  }
-
+  // Phan phan trang
   // tồng sản phẩm trong DB.
   const totalItems = await Product.count(find);
-  // tổng số trang cần
-  objectPagination.totalPages = Math.ceil(
-    totalItems / objectPagination.limitItems
-  );
-
-  // sản phẩm bắt đầu lấy
-  objectPagination.skip =
-    (objectPagination.currentPage - 1) * objectPagination.limitItems;
+  const objectPagination = paginationHelper(req.query, totalItems);
+  // ket thuc phan trang
 
   const products = await Product.find(find)
     .skip(objectPagination.skip)
