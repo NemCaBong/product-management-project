@@ -1,5 +1,6 @@
 const express = require("express");
 const methodOverride = require("method-override");
+const bodyParser = require("body-parser");
 const app = express();
 
 // import .env file
@@ -8,6 +9,10 @@ require("dotenv").config();
 // connect mongodb
 const database = require("./config/database");
 database.connect();
+
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
 // config port
 const port = process.env.PORT;
 

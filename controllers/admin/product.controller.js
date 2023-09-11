@@ -53,3 +53,22 @@ module.exports.changeStatus = async (req, res) => {
   await Product.updateOne({ _id: id }, { status: status });
   res.redirect("back");
 };
+
+// [PATCH] /admin/products/change-multi
+module.exports.changeMulti = async (req, res) => {
+  const status = req.body.type;
+  const ids = req.body.ids.split(", ");
+  console.log(ids);
+  await Product.updateMany({ _id: { $in: ids } }, { status: status });
+  res.redirect("back");
+};
+
+// [DELETE] /admin/products/delete/:id
+module.exports.deleteItem = async (req, res) => {
+  const id = req.params.id;
+  await Product.updateOne(
+    { _id: id },
+    { deleted: true, deletedAt: new Date() }
+  );
+  res.redirect("back");
+};
