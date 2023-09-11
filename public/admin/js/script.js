@@ -9,9 +9,13 @@ if (buttonStatus.length > 0) {
 
       if (status) {
         url.searchParams.set("status", status);
+        // set page to 1 if change the status
+        url.searchParams.set("page", 1);
       } else {
         url.searchParams.delete("status");
+        url.searchParams.delete("page");
       }
+
       // override the current address
       window.location.href = url;
     });
