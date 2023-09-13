@@ -32,6 +32,7 @@ module.exports.index = async (req, res) => {
   // ket thuc phan trang
 
   const products = await Product.find(find)
+    .sort({ position: "desc" })
     .skip(objectPagination.skip)
     .limit(objectPagination.limitItems);
 
@@ -62,15 +63,33 @@ module.exports.changeMulti = async (req, res) => {
     case "active":
       await Product.updateMany({ _id: { $in: ids } }, { status: "active" });
       break;
+
     case "inactive":
       await Product.updateMany({ _id: { $in: ids } }, { status: "active" });
       break;
+
     case "delete-all":
       await Product.updateMany(
         { _id: { $in: ids } },
         { deleted: true, deletedAt: new Date() }
       );
       break;
+
+    case "change-position":
+      for (const item of ids) {
+        let [id, position] = item.split("-");
+
+        position = parseInt(position);
+
+        await Product.updateOne(
+          { _id: id },
+          {
+            position: position,
+          }
+        );
+      }
+      break;
+
     default:
       break;
   }

@@ -88,41 +88,51 @@ if (checkboxMulti) {
 }
 // end check multi
 
-// Form ChangeMulti
-const formCheckAll = document.querySelector("[form-change-multi]");
-if (formCheckAll) {
-  formCheckAll.addEventListener("submit", (e) => {
+// Form Change Multi
+const formChangeMulti = document.querySelector("[form-change-multi]");
+if (formChangeMulti) {
+  formChangeMulti.addEventListener("submit", (e) => {
     e.preventDefault();
-
-    const checkedInput = checkboxMulti.querySelectorAll(
-      "input[name='id']:checked"
-    );
-
-    const inputOfForm = document.querySelector("input[name='ids']");
-    // lay value trong type
     const typeChange = e.target.elements.type.value;
-    if (typeChange === "delete-all"){
-      const isConfirm = confirm("Bạn có chắc muốn xóa những sản phẩm này? ")
+    console.log(typeChange);
+    // delete
+    if (typeChange == "delete-all") {
+      const isConfirm = confirm("Bạn có chắc muốn xóa những sản phẩm này?");
 
-      if(!isConfirm){
-        return
+      if (!isConfirm) {
+        return;
       }
     }
 
-    if (checkedInput.length > 0) {
-      let checkedInputArr = [];
+    const checkboxMulti = document.querySelector("[checkbox-multi]");
+    const inputsChecked = checkboxMulti.querySelectorAll(
+      "input[name='id']:checked"
+    );
 
-      checkedInput.forEach((input) => {
-        checkedInputArr.push(input.value);
+    if (inputsChecked.length > 0) {
+      let ids = [];
+      const inputIds = formChangeMulti.querySelector("input[name='ids']");
+
+      inputsChecked.forEach((input) => {
+        const id = input.value;
+
+        if (typeChange == "change-position") {
+          const position = input
+            .closest("tr")
+            .querySelector("input[name='position']").value;
+          console.log(position);
+          ids.push(`${id}-${position}`);
+        } else {
+          ids.push(id);
+        }
       });
 
-      inputOfForm.value = checkedInputArr.join(", ");
+      inputIds.value = ids.join(", ");
 
-      formCheckAll.submit();
+      formChangeMulti.submit();
     } else {
-      alert("Chon 1 ban ghi");
+      alert("Vui lòng chọn ít nhất một bản ghi!");
     }
-
   });
 }
-// End FormChangeMulti
+// End Form Change Multi
