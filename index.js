@@ -38,9 +38,9 @@ app.use(flash());
 
 // Routes
 const routeAdmin = require("./routes/admin/index.route");
-const route = require("./routes/client/index.route");
+const routeClient = require("./routes/client/index.route");
 routeAdmin(app);
-route(app);
+routeClient(app);
 
 app.listen(port, () => {
   console.log(`Listening on port: ${port}`);
