@@ -85,3 +85,16 @@
   cursor: pointer;
 }
 /* End Show Alert */
+
+/* preview-image */
+.image-preview[src=""] {
+  display: none;
+}
+.image-preview {
+  width: 150px;
+  height: auto;
+  margin-top: 15px;
+  border: 1px solid #ddd;
+  padding: 15px;
+  border-radius: 5px;
+}
