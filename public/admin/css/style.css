@@ -87,9 +87,6 @@
 /* End Show Alert */
 
 /* preview-image */
-.image-preview[src=""] {
-  display: none;
-}
 .image-preview {
   width: 150px;
   height: auto;
@@ -98,3 +95,7 @@
   padding: 15px;
   border-radius: 5px;
 }
+.image-preview[src=""] {
+  display: none;
+}
+/* end preview-image */
