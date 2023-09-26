@@ -23,8 +23,8 @@ const port = process.env.PORT;
 const systemConfig = require("./config/system");
 app.locals.prefixAdmin = systemConfig.prefixAdmin;
 
-app.use(express.static("public"));
-app.set("views", "./views");
+app.use(express.static(`${__dirname}/public`));
+app.set("views", `${__dirname}/views`);
 app.set("view engine", "pug");
 
 // usemethod override
