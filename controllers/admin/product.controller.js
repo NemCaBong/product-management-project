@@ -33,8 +33,20 @@ module.exports.index = async (req, res) => {
   const objectPagination = paginationHelper(req.query, totalItems);
   // ket thuc phan trang
 
+  // Sort
+
+  let sort = {};
+
+  if (req.query.sortKey && req.query.sortValue) {
+    sort[req.query.sortKey] = req.query.sortValue;
+  } else {
+    // mặc định sử dụng vị trí giảm dần
+    sort.position = "desc";
+  }
+  // End sort
+
   const products = await Product.find(find)
-    .sort({ position: "desc" })
+    .sort(sort)
     .skip(objectPagination.skip)
     .limit(objectPagination.limitItems);
 

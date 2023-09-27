@@ -170,3 +170,39 @@ if (uploadImage) {
 }
 
 // End preview image.
+
+//Sort
+const sort = document.querySelector("[sort]");
+if (sort) {
+  const sortSelect = sort.querySelector("[sort-select]");
+  const sortClear = sort.querySelector("[sort-clear]");
+  let url = new URL(window.location.href);
+  sortSelect.addEventListener("change", (e) => {
+    const [sortKey, sortValue] = e.target.value.split("-");
+
+    url.searchParams.set("sortKey", sortKey);
+    url.searchParams.set("sortValue", sortValue);
+
+    window.location.href = url.href;
+  });
+
+  sortClear.addEventListener("click", (e) => {
+    url.searchParams.delete("sortKey");
+    url.searchParams.delete("sortValue");
+    window.location.href = url.href;
+  });
+
+  // thêm selected cho phần option
+  const sortValue = url.searchParams.get("sortValue");
+  const sortKey = url.searchParams.get("sortKey");
+
+  if (sortKey && sortValue) {
+    const optionValue = `${sortKey}-${sortValue}`;
+
+    const sortOption = sortSelect.querySelector(
+      `option[value='${optionValue}']`
+    );
+    sortOption.selected = true;
+  }
+}
+// End Sort
