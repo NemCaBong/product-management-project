@@ -141,9 +141,9 @@ module.exports.createPost = async (req, res) => {
   }
 
   // địa chỉ để lưu ảnh cũng như lấy ảnh ra.
-  if (req.file) {
-    req.body.thumbnail = `/uploads/${req.file.filename}`;
-  }
+  // if (req.file) {
+  //   req.body.thumbnail = `/uploads/${req.file.filename}`;
+  // }
 
   const newProduct = new Product(req.body);
   // save to DB

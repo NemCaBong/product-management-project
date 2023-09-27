@@ -23,7 +23,7 @@ module.exports.index = async (req, res) => {
 
 // [GET] /products/:slug
 module.exports.detail = async (req, res) => {
-  console.log(req.params.slug);
+  // console.log(req.params.slug);
   try {
     const find = {
       deleted: false,
@@ -31,7 +31,7 @@ module.exports.detail = async (req, res) => {
     };
     const product = await Product.findOne(find);
 
-    console.log(product);
+    // console.log(product);
 
     res.render("client/pages/products/detail", {
       pageTitle: product.title,
