@@ -1,4 +1,5 @@
 const express = require("express");
+const path = require("path");
 const methodOverride = require("method-override");
 const bodyParser = require("body-parser");
 const app = express();
@@ -15,6 +16,13 @@ database.connect();
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// using tinymce
+// create a new route to the tinymce modules
+app.use(
+  "/tinymce",
+  express.static(path.join(__dirname, "node_modules", "tinymce"))
+);
 
 // config port
 const port = process.env.PORT;
