@@ -194,9 +194,9 @@ module.exports.editPatch = async (req, res) => {
   req.body.position = parseInt(req.body.position);
 
   // địa chỉ để lưu ảnh cũng như lấy ảnh ra.
-  if (req.file) {
-    req.body.thumbnail = `/uploads/${req.file.filename}`;
-  }
+  // if (req.file) {
+  //   req.body.thumbnail = `/uploads/${req.file.filename}`;
+  // }
   try {
     await Product.updateOne({ _id: id }, req.body);
     req.flash("success", "Cập nhật thành công!");
