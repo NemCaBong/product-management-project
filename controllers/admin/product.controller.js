@@ -24,9 +24,11 @@ module.exports.index = async (req, res) => {
 
   // phan tim kiem
   const objectSearch = searchHelper(req.query);
+  console.log(objectSearch);
   if (objectSearch.keyword) {
     find.title = objectSearch.keywordRegex;
   }
+  console.log(find);
   // het tim kiem
 
   // Phan phan trang

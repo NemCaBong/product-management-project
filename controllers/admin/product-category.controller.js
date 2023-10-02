@@ -1,18 +1,46 @@
 const ProductCategory = require("../../models/product-category.model");
 const systemConfig = require("../../config/system");
+
+const filterStatusHelper = require("../../helpers/filterStatus");
+const searchHelper = require("../../helpers/search");
+const paginationHelper = require("../../helpers/pagination");
 const createTreeHelper = require("../../helpers/createTree");
+
 // [GET] /admin/product-category
 module.exports.index = async (req, res) => {
   let find = {
     deleted: false,
   };
 
+  // bộ lọc
+  const filterStatus = filterStatusHelper(req.query);
+  // hết bộ lọc
+
+  // get status filter in URL
+  if (req.query.status) {
+    find.status = req.query.status;
+  }
+  // end
+
+  // phan tim kiem
+  const objectSearch = searchHelper(req.query);
+  console.log(objectSearch);
+  if (objectSearch.keyword) {
+    find.title = objectSearch.keywordRegex;
+  }
+  console.log(find);
+  // het tim kiem
+
   const productCategories = await ProductCategory.find(find);
   const newRecords = createTreeHelper.tree(productCategories);
+  console.log(productCategories);
+  console.log(newRecords);
 
   res.render("admin/pages/product-category/index", {
     pageTitle: "Danh mục sản phẩm",
     records: newRecords,
+    filterStatus: filterStatus,
+    keyword: objectSearch.keyword,
   });
 };
 
