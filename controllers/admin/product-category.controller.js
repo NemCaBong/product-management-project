@@ -21,21 +21,27 @@ module.exports.index = async (req, res) => {
     find.status = req.query.status;
   }
   // end
-
+  let sort = {};
+  if (req.query.sortKey && req.query.sortValue) {
+    sort[req.query.sortKey] = req.query.sortValue;
+  } else {
+    sort.position = "asc";
+  }
   // phan tim kiem
   const objectSearch = searchHelper(req.query);
-  console.log(objectSearch);
   if (objectSearch.keyword) {
     find.title = objectSearch.keywordRegex;
   }
-  console.log(find);
   // het tim kiem
 
-  const productCategories = await ProductCategory.find(find);
-  const newRecords = createTreeHelper.tree(productCategories);
-  console.log(productCategories);
-  console.log(newRecords);
-
+  const productCategories = await ProductCategory.find(find).sort(sort);
+  // hiển thị ra tree danh mục khi nào
+  let newRecords = {};
+  if (objectSearch.keyword || (req.query.sortKey && req.query.sortValue)) {
+    newRecords = productCategories;
+  } else {
+    newRecords = createTreeHelper.tree(productCategories);
+  }
   res.render("admin/pages/product-category/index", {
     pageTitle: "Danh mục sản phẩm",
     records: newRecords,

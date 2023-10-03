@@ -193,7 +193,7 @@ if (sort) {
     window.location.href = url.href;
   });
 
-  // thêm selected cho phần option
+  // thêm hiệu ứng selected cho phần option đc chọn
   const sortValue = url.searchParams.get("sortValue");
   const sortKey = url.searchParams.get("sortKey");
 
