@@ -87,9 +87,8 @@ module.exports.editCategory = async (req, res) => {
       deleted: false,
       _id: req.params.id,
     };
-    const productCategory = await ProductCategory.findOne(find);
 
-    const records = await ProductCategory.find({ deleted: false });
+    const records = await ProductCategory.find(find);
 
     const newRecords = createTreeHelper.tree(records);
 

@@ -61,3 +61,40 @@ module.exports.editPatch = async (req, res) => {
   }
   res.redirect("back");
 };
+
+// [GET] admin/roles/permissions
+module.exports.permissions = async (req, res) => {
+  try {
+    const records = await Role.find({
+      deleted: false,
+    });
+    res.render("admin/pages/roles/permissions", {
+      pageTitle: "Phân quyền",
+      records: records,
+    });
+  } catch (err) {
+    res.redirect(`${systemConfig.prefixAdmin}/roles/permissions`);
+  }
+};
+
+// [PATCH] admin/roles/permissions
+module.exports.permissionsPatch = async (req, res) => {
+  try {
+    // khi truyền nó dưới dạng JSON vào trong ô input có name là "permissions"
+    // Khi chúng ta chuyển về dạng Object trong JS thì cần phải .permissons vào.
+    const permissions = JSON.parse(req.body.permissions);
+    // console.log(req.body);
+    if (permissions) {
+      permissions.forEach(async (item) => {
+        await Role.updateOne(
+          { _id: item.id },
+          { permissions: item.permissions }
+        );
+      });
+    }
+    req.flash("success", "Cập nhật phân quyền thành công");
+  } catch (err) {
+    req.flash("error", "Cập nhật phân quyền thất bại");
+  }
+  res.redirect(`back`);
+};
