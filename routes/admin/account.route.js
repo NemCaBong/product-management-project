@@ -25,4 +25,16 @@ router.post(
   controller.createPost
 );
 
+// [GET] admin/accounts/edit/:id
+router.get("/edit/:id", controller.edit);
+
+// [PATCH] admin/accounts/edit/:id
+router.patch(
+  "/edit/:id",
+  upload.single("avatar"),
+  uploadCloud.upload,
+  // validate.editPatch,
+  controller.editPatch
+);
+
 module.exports = router;

@@ -58,3 +58,54 @@ module.exports.createPost = async (req, res) => {
     res.redirect(`${systemConfig.prefixAdmin}/accounts`);
   }
 };
+
+// [GET] /admin/accounts/edit/:id
+module.exports.edit = async (req, res) => {
+  let find = {
+    deleted: false,
+    _id: req.params.id,
+  };
+
+  try {
+    const account = await Account.findOne(find);
+
+    const roles = await Role.find({
+      deleted: false,
+    });
+
+    res.render("admin/pages/accounts/edit", {
+      pageTitle: "Chỉnh sửa tài khoản",
+      data: account,
+      roles: roles,
+    });
+  } catch (err) {
+    res.redirect(`${systemConfig.prefixAdmin}/accounts`);
+  }
+};
+
+// [PATCH] /admin/accounts/edit/:id
+module.exports.editPatch = async (req, res) => {
+  const id = req.params.id;
+  const emailExist = await Account.findOne({
+    // $ne: not equally, dùng để tìm kiếm
+    _id: { $ne: id },
+    deleted: false,
+    email: req.body.email,
+  });
+
+  // Không đc trùng email
+  if (emailExist) {
+    req.flash("error", `Email ${emailExist.email} đã tồn tại`);
+  } else {
+    if (req.body.password) {
+      req.body.password = md5(req.body.password);
+    } else {
+      // delete đi key password
+      delete req.body.password;
+    }
+    await Account.updateOne({ _id: id }, req.body);
+    req.flash("success", "Cập nhật tài khoản thành công");
+  }
+
+  res.redirect("back");
+};
