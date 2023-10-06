@@ -83,7 +83,6 @@ module.exports.permissionsPatch = async (req, res) => {
     // khi truyền nó dưới dạng JSON vào trong ô input có name là "permissions"
     // Khi chúng ta chuyển về dạng Object trong JS thì cần phải .permissons vào.
     const permissions = JSON.parse(req.body.permissions);
-    // console.log(req.body);
     if (permissions) {
       permissions.forEach(async (item) => {
         await Role.updateOne(

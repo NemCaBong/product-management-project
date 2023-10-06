@@ -1,5 +1,5 @@
 const express = require("express");
-const controller = require("../../controllers/admin/roles.controller");
+const controller = require("../../controllers/admin/role.controller");
 const router = express.Router();
 
 // trang index
