@@ -39,3 +39,14 @@ module.exports.loginPost = async (req, res) => {
   res.cookie("token", user.token);
   res.redirect(`${systemConfig.prefixAdmin}/dashboard`);
 };
+
+// [GET] /admin/auth/logout
+module.exports.logout = (req, res) => {
+  // đang viết theo kiểu SSR thì bên server đã render ra giao diện
+  // all logic xử lý bên server.
+  // ko xử lý bên client Or viết trong file JS trong public cx đc
+
+  // xóa token trong cookies đi
+  res.clearCookie("token");
+  res.redirect(`${systemConfig.prefixAdmin}/auth/login`);
+};
