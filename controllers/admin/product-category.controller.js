@@ -21,12 +21,14 @@ module.exports.index = async (req, res) => {
     find.status = req.query.status;
   }
   // end
+
   let sort = {};
   if (req.query.sortKey && req.query.sortValue) {
     sort[req.query.sortKey] = req.query.sortValue;
   } else {
     sort.position = "asc";
   }
+
   // phan tim kiem
   const objectSearch = searchHelper(req.query);
   if (objectSearch.keyword) {
@@ -34,7 +36,13 @@ module.exports.index = async (req, res) => {
   }
   // het tim kiem
 
+  // Phan phan trang
+  const totalItems = await ProductCategory.count(find);
+  const objectPagination = paginationHelper(req.query, totalItems);
+  // ket thuc phan trang
+
   const productCategories = await ProductCategory.find(find).sort(sort);
+
   // hiển thị ra tree danh mục khi nào
   let newRecords = {};
   if (objectSearch.keyword || (req.query.sortKey && req.query.sortValue)) {
@@ -42,11 +50,14 @@ module.exports.index = async (req, res) => {
   } else {
     newRecords = createTreeHelper.tree(productCategories);
   }
+  // kết thúc điều kiện hiển thị
+
   res.render("admin/pages/product-category/index", {
     pageTitle: "Danh mục sản phẩm",
     records: newRecords,
     filterStatus: filterStatus,
     keyword: objectSearch.keyword,
+    pagination: objectPagination,
   });
 };
 
@@ -117,4 +128,29 @@ module.exports.editPatch = async (req, res) => {
     res.redirect("back");
   }
   res.redirect("back");
+};
+
+module.exports.detail = async (req, res) => {
+  try {
+    const find = {
+      deleted: false,
+      _id: req.params.id,
+    };
+
+    let fatherCategoryName = "";
+    const productCategory = await ProductCategory.findOne(find);
+    if (productCategory.parent_id) {
+      find._id = productCategory.parent_id;
+      const fatherCategory = await ProductCategory.findOne(find);
+      fatherCategoryName = fatherCategory.title;
+    }
+
+    res.render("admin/pages/product-category/detail", {
+      pageTitle: "Chi tiết sản phẩm",
+      productCategory: productCategory,
+      fatherName: fatherCategoryName,
+    });
+  } catch (error) {
+    res.redirect(`${systemConfig.prefixAdmin}/product-category`);
+  }
 };
