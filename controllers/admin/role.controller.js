@@ -97,3 +97,49 @@ module.exports.permissionsPatch = async (req, res) => {
   }
   res.redirect(`back`);
 };
+
+module.exports.detail = async (req, res) => {
+  try {
+    let find = {
+      deleted: false,
+      _id: req.params.id,
+    };
+    const role = await Role.findOne(find);
+
+    let permissionsName = {
+      "products-category": "Danh mục sản phẩm",
+      products: "Sản phẩm",
+      roles: "Nhóm quyền",
+    };
+
+    let permissionsAct = {
+      view: "Xem",
+      create: "Thêm mới",
+      edit: "Sửa",
+      delete: "Xóa",
+      permissions: "Phân quyền",
+    };
+
+    let permissionOfRole = {};
+
+    for (let permission of role.permissions) {
+      let [name, act] = permission.split("_");
+      name = permissionsName[name];
+      act = permissionsAct[act];
+      if (!permissionOfRole.hasOwnProperty(name)) {
+        permissionOfRole[name] = [];
+        permissionOfRole[name].push(act);
+      } else {
+        permissionOfRole[name].push(act);
+      }
+    }
+
+    res.render("admin/pages/roles/detail", {
+      role: role,
+      rolePermissions: permissionOfRole,
+    });
+  } catch (err) {
+    req.flash("error", "Xem chi tiết nhóm quyền thất bại");
+    res.render(`${systemConfig.prefixAdmin}/roles`);
+  }
+};
