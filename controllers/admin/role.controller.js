@@ -98,6 +98,7 @@ module.exports.permissionsPatch = async (req, res) => {
   res.redirect(`back`);
 };
 
+// [GET] admin/roles/detail/:id
 module.exports.detail = async (req, res) => {
   try {
     let find = {
@@ -143,3 +144,5 @@ module.exports.detail = async (req, res) => {
     res.render(`${systemConfig.prefixAdmin}/roles`);
   }
 };
+
+// [DELETE] admin/roles/delete/:id
