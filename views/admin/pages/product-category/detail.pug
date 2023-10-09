@@ -1,35 +1,36 @@
 extends ../../layouts/default.pug
 
 block main
-  if (productCategory.title)
-    h1(class="mb-4") #{productCategory.title}
+  if (role.permissions.includes("products-category_view"))
+    if (productCategory.title)
+      h1(class="mb-4") #{productCategory.title}
 
-  if (productCategory.thumbnail)
-    div(class="mb-4")
-      img(
-        src=productCategory.thumbnail
-        style="width: 100px"
-      )
-  if(fatherName)
-  div(class="mb-4")
-    span Danh mục con của: 
+    if (productCategory.thumbnail)
+      div(class="mb-4")
+        img(
+          src=productCategory.thumbnail
+          style="width: 100px"
+        )
     if(fatherName)
-      span #{fatherName}
-    else
-      span Không có
-  
-  if (productCategory.status)
     div(class="mb-4")
-      span Trạng thái:
-      if (productCategory.status === "active")
-        span(class="badge badge-success") Hoạt động
+      span Danh mục con của: 
+      if(fatherName)
+        span #{fatherName}
       else
-        span(class="badge badge-danger") Dừng hoạt động
+        span Không có
+    
+    if (productCategory.status)
+      div(class="mb-4")
+        span Trạng thái:
+        if (productCategory.status === "active")
+          span(class="badge badge-success") Hoạt động
+        else
+          span(class="badge badge-danger") Dừng hoạt động
 
-  if (productCategory.description)
-    div(class="mb-4") !{productCategory.description}
+    if (productCategory.description)
+      div(class="mb-4") !{productCategory.description}
 
-  a(
-    href=`${prefixAdmin}/product-category/edit/${productCategory.id}`
-    class="btn btn-warning"
-  ) Chỉnh sửa
+    a(
+      href=`${prefixAdmin}/product-category/edit/${productCategory.id}`
+      class="btn btn-warning"
+    ) Chỉnh sửa
