@@ -146,3 +146,8 @@ module.exports.detail = async (req, res) => {
 };
 
 // [DELETE] admin/roles/delete/:id
+module.exports.delete = async (req, res) => {
+  const id = req.params.id;
+  await Role.updateOne({ _id: id }, { deleted: true, deletedAt: new Date() });
+  res.redirect("back");
+};
