@@ -23,7 +23,6 @@ module.exports.index = async (req, res) => {
     });
     acc.role = role;
   }
-
   res.render("admin/pages/accounts/index", {
     pageTitle: "Danh sách tài khoản",
     accounts: accounts,
@@ -107,5 +106,49 @@ module.exports.editPatch = async (req, res) => {
     req.flash("success", "Cập nhật tài khoản thành công");
   }
 
+  res.redirect("back");
+};
+
+// [GET] /admin/accounts/detail/:id
+module.exports.detail = async (req, res) => {
+  try {
+    const find = {
+      deleted: false,
+      _id: req.params.id,
+    };
+
+    const account = await Account.findOne(find);
+    const role = await Role.findOne({
+      deleted: false,
+      _id: account.role_id,
+    });
+    account.role = role;
+    res.render("admin/pages/accounts/detail", {
+      pageTitle: "Chi tiết sản phẩm",
+      account: account,
+    });
+  } catch (error) {
+    res.redirect(`${systemConfig.prefixAdmin}/accounts`);
+  }
+};
+
+// [DELETE] /admin/accounts/delete/:id
+module.exports.delete = async (req, res) => {
+  const id = req.params.id;
+  await Account.updateOne(
+    { _id: id },
+    { deleted: true, deletedAt: new Date() }
+  );
+  res.redirect("back");
+};
+
+// [PATCH] /admin/accounts/change-status/:status/:id
+module.exports.changeStatus = async (req, res) => {
+  const status = req.params.status;
+  const id = req.params.id;
+
+  // update status of product
+  await Account.updateOne({ _id: id }, { status: status });
+  req.flash("success", "Cập nhật trạng thái thành công");
   res.redirect("back");
 };
