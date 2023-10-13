@@ -1,6 +1,11 @@
 const productRoutes = require("./product.route");
 const homeRoutes = require("./home.route");
+const categoryMiddleware = require("../../middlewares/client/category.middleware");
 module.exports = (app) => {
-	app.use("/products", productRoutes);
-	app.use("/", homeRoutes);
+  // gần như trang nào cũng cần dùng đến middleware này để có productCategory
+  // Vậy nên chúng ta app.use để mặc định chạy câu lệnh này luôn
+  app.use(categoryMiddleware.category);
+
+  app.use("/", homeRoutes);
+  app.use("/products", productRoutes);
 };
