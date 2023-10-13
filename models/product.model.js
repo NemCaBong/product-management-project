@@ -17,6 +17,7 @@ const productSchema = new mongoose.Schema(
     stock: Number,
     thumbnail: String,
     status: String,
+    featured: String,
     position: Number,
     createdBy: {
       account_id: String,
@@ -33,6 +34,7 @@ const productSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+
     updatedBy: [
       {
         account_id: String,
