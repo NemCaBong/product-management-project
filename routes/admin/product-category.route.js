@@ -19,7 +19,7 @@ router.post(
   validate.createPost,
   controller.createPost
 );
-router.get("/edit/:id", controller.editCategory);
+router.get("/edit/:id", controller.edit);
 
 router.patch(
   "/edit/:id",

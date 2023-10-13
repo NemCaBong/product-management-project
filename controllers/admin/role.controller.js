@@ -52,14 +52,26 @@ module.exports.editPatch = async (req, res) => {
   try {
     if (req.body) {
       const id = req.params.id;
-      await Role.updateOne({ _id: id }, req.body);
+      await Role.updateOne(
+        { _id: id },
+        {
+          ...req.body,
+          $push: {
+            updatedBy: {
+              account_id: res.locals.user.id,
+              updatedAt: new Date(),
+            },
+          },
+        }
+      );
       req.flash("success", "Cập nhật nhóm quyền thành công");
     }
-    req.flash("error", "Không có dữ liệu để cập nhật");
+    // req.flash("error", "Không có dữ liệu để cập nhật");
   } catch (err) {
     req.flash("error", "Cập nhật nhóm quyền thất bại");
+    res.redirect("back");
   }
-  res.redirect("back");
+  res.redirect(`${systemConfig.prefixAdmin}/roles`);
 };
 
 // [GET] admin/roles/permissions

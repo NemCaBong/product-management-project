@@ -25,6 +25,10 @@ const productCategorySchema = new mongoose.Schema(
       unique: true,
     },
     deletedAt: Date,
+    updatedBy: {
+      account_id: String,
+      updatedAt: Date,
+    },
   },
   {
     timestamps: true,
