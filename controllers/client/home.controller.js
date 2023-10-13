@@ -7,13 +7,21 @@ module.exports.index = async (req, res) => {
     deleted: false,
     featured: "1",
     status: "active",
-  });
+  }).limit(6);
   // ngừng lấy
-
   const newFeaturedProducts = productsHelper.productsPrice(featuredProducts);
+
+  // lấy ra danh sách sản phẩm mới nhất (theo position)
+  const newProducts = await Product.find({
+    deleted: false,
+    status: "active",
+  })
+    .sort({ position: "desc" })
+    .limit(6);
 
   res.render("client/pages/home/index.pug", {
     pageTitle: "Trang chủ",
     featuredProducts: newFeaturedProducts,
+    newProducts: newProducts,
   });
 };
