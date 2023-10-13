@@ -78,7 +78,15 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/product-category/create
 module.exports.createPost = async (req, res) => {
-  console.log(req.body);
+  // const permissions = res.locals.role.permissions;
+
+  // if(permissions.includes("products-category_create")) {
+  //   console.log("Có quyền");
+  // } else {
+  //   res.send("403");
+  //   return;
+  // }
+
   if (req.body.position === "") {
     const posCount = await ProductCategory.count();
     req.body.position = posCount + 1;
