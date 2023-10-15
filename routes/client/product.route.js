@@ -4,8 +4,8 @@ const router = express.Router();
 
 router.get("/", controller.index);
 
-// detail of Item page
-router.get("/:slug", controller.detail);
-// end detail of item.
+// router.get("/:slug", controller.detail);
+
+router.get("/:slugCategory", controller.category);
 
 module.exports = router;
