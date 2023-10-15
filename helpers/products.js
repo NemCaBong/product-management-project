@@ -8,3 +8,13 @@ module.exports.productsPrice = (products) => {
   });
   return productPrices;
 };
+
+// dùng để hiển thị ra giá mới của 1 sản phẩm
+
+module.exports.priceNewProduct = (product) => {
+  const newPrice = (
+    (product.price * (100 - product.discountPercentage)) /
+    100
+  ).toFixed(0);
+  return newPrice;
+};

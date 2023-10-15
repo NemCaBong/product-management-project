@@ -17,18 +17,29 @@ module.exports.index = async (req, res) => {
   });
 };
 
-// [GET] /products/:slug
+// [GET] /detail/:slug
 module.exports.detail = async (req, res) => {
-  // console.log(req.params.slug);
   try {
     const find = {
       deleted: false,
-      slug: req.params.slug,
+      slug: req.params.slugProduct,
     };
     const product = await Product.findOne(find);
 
-    // console.log(product);
+    // lấy ra category của sản phẩm
+    if (product.product_category_id) {
+      const category = await ProductCategory.findOne({
+        deleted: false,
+        status: "active",
+        _id: product.product_category_id,
+      });
 
+      product.category = category;
+    }
+    // Thêm giá mới cho sản phẩm
+    product.newPrice = productsHelper.priceNewProduct(product);
+
+    console.log(product.newPrice);
     res.render("client/pages/products/detail", {
       pageTitle: product.title,
       product: product,
@@ -39,7 +50,6 @@ module.exports.detail = async (req, res) => {
 };
 
 // [GET] /products/:slugCategory
-
 module.exports.category = async (req, res) => {
   try {
     console.log(req.params.slugCategory);

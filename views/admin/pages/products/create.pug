@@ -44,10 +44,10 @@ block main
         input(
           type="radio"
           class="form-check-input"
-          id="featured0"
+          id="featured"
           name="featured"
           value="0"
-          checked=(product.featured == "1" ? true : false)
+          checked
         )
         label(for="featured0" class="form-check-label") Không
       div(class="form-group")
@@ -57,7 +57,6 @@ block main
           id="desc"
           name="description"
           rows="5"
-          checked=(product.featured == "1" ? true : false)
         )
 
       div(class="form-group")
