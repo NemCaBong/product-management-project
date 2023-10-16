@@ -6,6 +6,8 @@ module.exports.category = async (req, res, next) => {
     deleted: false,
   });
 
+  // dùng để lấy ra các category cha và category con
+  // để dùng trong partials header.pug
   const productCategoryTree = createTreeHelper.tree(productCategory);
 
   res.locals.layoutProductsCategory = productCategoryTree;
