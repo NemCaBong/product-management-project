@@ -15,6 +15,15 @@ module.exports.cartId = async (req, res, next) => {
     });
   } else {
     // Lấy ra giỏ hàng từ DB
+    const cart = await Cart.findOne({
+      _id: req.cookies.cartID,
+    });
+
+    cart.totalQuantity = cart.products.reduce(
+      (count, item) => count + item.quantity,
+      0
+    );
+    res.locals.miniCart = cart;
   }
   next();
 };
