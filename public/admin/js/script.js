@@ -138,7 +138,7 @@ if (formChangeMulti) {
 }
 // End Form Change Multi
 
-// Show Modal
+// Show Alert - req.flash()
 const showAlert = document.querySelector("[show-alert]");
 if (showAlert) {
   const time = parseInt(showAlert.getAttribute("data-time"));
@@ -153,7 +153,7 @@ if (showAlert) {
     showAlert.classList.add("alert-hidden");
   });
 }
-// End Modal
+// End Alert
 
 // Preview image
 const uploadImage = document.querySelector("[upload-image]");
