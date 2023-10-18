@@ -1,4 +1,40 @@
 const Cart = require("../../models/cart.model");
+const Product = require("../../models/product.model");
+const productsHelper = require("../../helpers/products");
+// [GET] /cart
+module.exports.index = async (req, res) => {
+  const cartID = req.cookies.cartID;
+
+  const cart = await Cart.findOne({
+    _id: cartID,
+  });
+  if (cart.products.length > 0) {
+    // Lấy ra thông tin các sản phẩm trong giỏ hàng
+    // và gán chúng vào trong cart.products
+    for (const item of cart.products) {
+      const productID = item.product_id;
+      const productInfo = await Product.findOne({
+        deleted: false,
+        _id: productID,
+      }).select("title thumbnail slug price discountPercentage");
+
+      productInfo.newPrice = productsHelper.priceNewProduct(productInfo);
+
+      item.productInfo = productInfo;
+
+      item.totalPrice = productInfo.newPrice * item.quantity;
+    }
+  }
+
+  cart.totalPrice = cart.products.reduce(
+    (total, item) => total + item.totalPrice,
+    0
+  );
+  res.render("client/pages/cart/index", {
+    pageTitle: "Trang giỏ hàng",
+    cartDetail: cart,
+  });
+};
 
 // [POST] /cart/add/:productID
 module.exports.addPost = async (req, res) => {
@@ -43,5 +79,22 @@ module.exports.addPost = async (req, res) => {
   }
 
   req.flash("success", "Đã thêm sản phẩm vào giỏ hàng");
+  res.redirect("back");
+};
+
+// [GET] /cart/delete/:productID
+module.exports.delete = async (req, res) => {
+  const cartID = req.cookies.cartID;
+  const productID = req.params.productID;
+  await Cart.updateOne(
+    {
+      _id: cartID,
+    },
+    {
+      $pull: { products: { product_id: productID } },
+    }
+  );
+
+  req.flash("success", "Đã xóa sản phẩm trong giỏ hàng");
   res.redirect("back");
 };
