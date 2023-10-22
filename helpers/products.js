@@ -12,9 +12,12 @@ module.exports.productsPrice = (products) => {
 // dùng để hiển thị ra giá mới của 1 sản phẩm
 
 module.exports.priceNewProduct = (product) => {
-  const newPrice = (
-    (product.price * (100 - product.discountPercentage)) /
-    100
-  ).toFixed(0);
-  return newPrice;
+  if (product) {
+    const newPrice = (
+      (product.price * (100 - product.discountPercentage)) /
+      100
+    ).toFixed(0);
+    return newPrice;
+  }
+  return 0;
 };

@@ -40,7 +40,7 @@ block main
                       name="quantity"
                       value=item.quantity
                       min="1"
-                      item-id=item.product_id
+                      product-id=item.product_id
                       style="width: 60px"
                     )
                   td #{item.totalPrice}$
@@ -61,3 +61,6 @@ block main
 
         div(class="text-right mt-3")
           a(href="/checkout" class="btn btn-success") THANH TOÁN
+  
+  //- ĐI vào folder public rồi lấy ra cart.js
+  script(src="/js/cart.js")
