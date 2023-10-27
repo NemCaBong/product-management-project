@@ -51,8 +51,6 @@ module.exports.detail = async (req, res) => {
 // [GET] /products/:slugCategory
 module.exports.category = async (req, res) => {
   try {
-    console.log(req.params.slugCategory);
-
     // Tìm ra danh mục đó là gì
     const category = await ProductCategory.findOne({
       deleted: false,
