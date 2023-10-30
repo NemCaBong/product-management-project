@@ -22,7 +22,7 @@ module.exports.registerPost = async (req, res) => {
   }
 
   // mã hóa password
-  req.body.email = md5(req.body.email);
+  req.body.password = md5(req.body.password);
 
   // tạo tk
   const user = await User(req.body);
@@ -38,7 +38,7 @@ module.exports.registerPost = async (req, res) => {
 // [GET] /user/login
 module.exports.login = async (req, res) => {
   res.render("client/pages/user/login", {
-    pageTitle: "Đăng nhập",
+    pageTitle: "Đăng nhập tài kho",
   });
 };
 
@@ -72,5 +72,12 @@ module.exports.loginPost = async (req, res) => {
   res.cookie("tokenUser", user.tokenUser);
 
   // trở về trang chủ
+  res.redirect("/");
+};
+
+// [GET] /user/logout
+module.exports.logout = async (req, res) => {
+  // Xóa token trong cookies là xong
+  res.clearCookie("tokenUser");
   res.redirect("/");
 };
