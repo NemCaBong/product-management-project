@@ -2,6 +2,7 @@ const express = require("express");
 const controller = require("../../controllers/client/user.controller");
 const router = express.Router();
 const userValidate = require("../../validates/client/user.validate");
+const authenMiddleware = require("../../middlewares/client/authen.middleware");
 
 // Phần đường dẫn register
 router.get("/register", controller.register);
@@ -29,4 +30,6 @@ router.post(
   userValidate.resetPasswordPost,
   controller.resetPasswordPost
 );
+
+router.get("/info", authenMiddleware.requireAuth, controller.info);
 module.exports = router;

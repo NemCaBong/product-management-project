@@ -36,6 +36,8 @@ header.header
               a(href="/cart") Giỏ hàng (#{miniCart ? miniCart.totalQuantity : 0})
             //- gom lại thành nhóm user cho dễ quản lý.
             if(user)
+              li
+                a(href="/user/info") #{user.fullName}
               li 
                 a(href="/user/logout") Đăng xuất
             else 
