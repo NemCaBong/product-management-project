@@ -81,20 +81,28 @@ module.exports.loginPost = async (req, res) => {
 
   if (cart) {
     res.cookie("cartID", cart.id);
+  } else {
+    // lưu luôn userid vào cart
+    // để biết giỏ hàng đó của ai
+    await Cart.updateOne(
+      {
+        _id: req.cookies.cartID,
+      },
+      {
+        user_id: user.id,
+      }
+    );
+    // bởi vì trong cart.middleware
+    // mỗi khi chưa có cartID mà đi vào mấy route liên quan đến client thì chúng
+    // ta tự tạo ra cart mới luôn
+    // nếu đăng nhập thì từ đó đây chính là cartID của user này luôn.
+    // cart đó sẽ lưu tạm thời những sp của khách hàng đã cho vào
+    // thì để tầm 30 ngày là oke
+    // hết 30 ngày cartID tự expire
+    // thì nếu còn userid thì sẽ lấy đúng cartID cũ
+    // nếu k còn userid => tạo ra cartID mới cho ng dùng đó
+    // nếu đăng nhập thì lại có userid và cartid đúng.
   }
-
-  // Nếu đăng nhập thành công
-  // thì lưu luôn userid vào cart
-  // để biết giỏ hàng đó của ai
-  // để tiện lấy data và gợi ý cho người dùng spham.
-  await Cart.updateOne(
-    {
-      _id: req.cookies.cartID,
-    },
-    {
-      user_id: user.id,
-    }
-  );
 
   // trả ra token vào cookies
   res.cookie("tokenUser", user.tokenUser);
