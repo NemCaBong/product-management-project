@@ -48,8 +48,15 @@ app.use(flash());
 // Routes
 const routeAdmin = require("./routes/admin/index.route");
 const routeClient = require("./routes/client/index.route");
+
 routeAdmin(app);
 routeClient(app);
+
+app.get("*", (req, res) => {
+  res.render("client/pages/errors/404", {
+    pageTitle: "404 Not Found",
+  });
+});
 
 app.listen(port, () => {
   console.log(`Listening on port: ${port}`);
