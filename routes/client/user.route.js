@@ -32,4 +32,5 @@ router.post(
 );
 
 router.get("/info", authenMiddleware.requireAuth, controller.info);
+
 module.exports = router;

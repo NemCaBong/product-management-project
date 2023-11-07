@@ -1,5 +1,6 @@
 const md5 = require("md5");
 const User = require("../../models/user.model");
+const Cart = require("../../models/cart.model");
 const ForgotPassword = require("../../models/forgot-password.model");
 const generate = require("../../helpers/generate");
 const sendMailHelper = require("../../helpers/sendMail");
@@ -72,6 +73,29 @@ module.exports.loginPost = async (req, res) => {
     res.redirect("back");
     return;
   }
+
+  // Nếu user này đã có cart thì lưu cart đó vào cookie.
+  const cart = await Cart.findOne({
+    user_id: user.id,
+  });
+
+  if (cart) {
+    res.cookie("cartID", cart.id);
+  }
+
+  // Nếu đăng nhập thành công
+  // thì lưu luôn userid vào cart
+  // để biết giỏ hàng đó của ai
+  // để tiện lấy data và gợi ý cho người dùng spham.
+  await Cart.updateOne(
+    {
+      _id: req.cookies.cartID,
+    },
+    {
+      user_id: user.id,
+    }
+  );
+
   // trả ra token vào cookies
   res.cookie("tokenUser", user.tokenUser);
 
@@ -81,8 +105,10 @@ module.exports.loginPost = async (req, res) => {
 
 // [GET] /user/logout
 module.exports.logout = async (req, res) => {
-  // Xóa token trong cookies là xong
+  // Xóa token trong cookies
   res.clearCookie("tokenUser");
+  // xóa cartID
+  res.clearCookie("cartID");
   res.redirect("/");
 };
 
