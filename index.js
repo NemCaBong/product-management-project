@@ -7,12 +7,22 @@ const session = require("express-session");
 const flash = require("express-flash");
 const cookieParser = require("cookie-parser");
 const moment = require("moment");
+const http = require("http");
+const { Server } = require("socket.io");
+
 // import .env file
 require("dotenv").config();
 
 // connect mongodb
 const database = require("./config/database");
 database.connect();
+
+// SOCKET.IO
+const server = http.createServer(app);
+const io = new Server(server);
+// làm biến _io global trong toàn project
+global._io = io;
+// END Socket.io
 
 // parse application/x-www-form-urlencoded
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -58,6 +68,9 @@ app.get("*", (req, res) => {
   });
 });
 
-app.listen(port, () => {
+// chúng ta phải đổi thành đứng từ server.listen
+// chứ không phải từ app.listen nữa
+// bởi đã nhúng app vào server = http.createServer(app)
+server.listen(port, () => {
   console.log(`Listening on port: ${port}`);
 });

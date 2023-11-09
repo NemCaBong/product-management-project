@@ -10,7 +10,7 @@ const categoryMiddleware = require("../../middlewares/client/category.middleware
 const cartMiddleware = require("../../middlewares/client/cart.middleware");
 const userMiddleware = require("../../middlewares/client/user.middleware");
 const settingMiddleware = require("../../middlewares/client/setting.middleware");
-
+const authenMiddleware = require("../../middlewares/client/authen.middleware");
 module.exports = (app) => {
   // gần như trang nào cũng cần dùng đến middleware này để có productCategory
   // Vậy nên chúng ta app.use để mặc định chạy câu lệnh này luôn
@@ -22,7 +22,8 @@ module.exports = (app) => {
   app.use(cartMiddleware.cartId);
 
   app.use("/", homeRoutes);
-  app.use("/chat", chatRoutes);
+  // buộc phải login mới đc chat
+  app.use("/chat", authenMiddleware.requireAuth, chatRoutes);
   app.use("/cart", cartRoutes);
   app.use("/user", userRoutes);
   app.use("/search", searchRoutes);
