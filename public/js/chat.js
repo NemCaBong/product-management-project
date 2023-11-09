@@ -54,3 +54,30 @@ if (innerBody) {
   innerBody.scrollTop = innerBody.scrollHeight;
 }
 // END
+
+// show icon picker
+import * as Popper from "https://cdn.jsdelivr.net/npm/@popperjs/core@^2/dist/esm/index.js";
+const button = document.querySelector(".button-icon");
+if (button) {
+  const tooltip = document.querySelector(".tooltip");
+  Popper.createPopper(button, tooltip);
+
+  document.querySelector(".button-icon").onclick = () => {
+    tooltip.classList.toggle("shown");
+  };
+}
+// end icon picker
+
+// insert emoji to input
+const emojiPicker = document.querySelector("emoji-picker");
+if (emojiPicker) {
+  const inputChat = document.querySelector(
+    ".chat .inner-form input[name='content']"
+  );
+
+  emojiPicker.addEventListener("emoji-click", (event) => {
+    const icon = event.detail.unicode;
+    inputChat.value = inputChat.value + icon;
+  });
+}
+// end insert emoji
