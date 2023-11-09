@@ -9,8 +9,6 @@ module.exports.index = async (req, res) => {
   // dùng biến _io của global
   // socket.io
   _io.once("connection", (socket) => {
-    // console.log("a user connected", socket.id);
-
     socket.on("CLIENT_SEND_MESSAGE", async (content) => {
       const chat = new Chat({
         user_id: userID,
@@ -18,6 +16,16 @@ module.exports.index = async (req, res) => {
       });
       // lưu đoạn code vào db.
       await chat.save();
+
+      // sau khi lưu vào database xong thì chúng ta trả lại
+      // cái tin nhắn cho client side để nó hiển thị realtime.
+      const fullName = res.locals.user.fullName;
+
+      _io.emit("SERVER_RETURN_MESSAGE", {
+        fullName: fullName,
+        user_id: userID,
+        content: content,
+      });
     });
   });
 
