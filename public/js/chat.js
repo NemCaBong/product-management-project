@@ -1,5 +1,15 @@
 import * as Popper from "https://cdn.jsdelivr.net/npm/@popperjs/core@^2/dist/esm/index.js";
 
+// file-upload-with-preview
+const upload = new FileUploadWithPreview.FileUploadWithPreview(
+  "upload-images",
+  {
+    multiple: true,
+    maxFileCount: 10,
+  }
+);
+// end file-upload-with-preview
+
 // CLIENT_SEND_MESSAGE
 const formSendData = document.querySelector(".chat .inner-form");
 if (formSendData) {
@@ -8,10 +18,18 @@ if (formSendData) {
 
     // content là name của thẻ input.
     const content = e.target.elements.content.value;
+    const images = upload.cachedFileArray;
+    console.log(images);
 
-    if (content) {
-      socket.emit("CLIENT_SEND_MESSAGE", content);
+    if (content || images.length > 0) {
+      socket.emit("CLIENT_SEND_MESSAGE", {
+        content: content,
+        images: images,
+      });
+
       e.target.elements.content.value = "";
+      // clear images.
+      upload.resetPreviewPanel();
       socket.emit("CLIENT_SEND_TYPING", "hidden");
     }
   });
@@ -30,7 +48,10 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
 
   const innerListTyping = document.querySelector(".chat .inner-list-typing");
   const div = document.createElement("div");
+
   let innerName = "";
+  let innerContent = "";
+  let innerImages = "";
 
   // Nếu kph tin nhắn của mình thì hiển thị theo kiểu khác
   if (myID === data.user_id) {
@@ -40,9 +61,25 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
     div.classList.add("inner-incoming");
   }
 
+  if (data.content) {
+    innerContent = `<div class="inner-content">${data.content}</div>`;
+  }
+
+  // 1 mảng trống vẫn hiểu là TRUE => có
+  if (data.images.length > 0) {
+    innerImages = `<div class="inner-images">`;
+
+    for (const image of data.images) {
+      innerImages += `<img src="${image}">`;
+    }
+
+    innerImages += `</div>`;
+  }
+
   div.innerHTML = `
     ${innerName}
-    <div class="inner-content">${data.content}</div>
+    ${innerContent}
+    ${innerImages}
   `;
   innerBody.insertBefore(div, innerListTyping);
 
