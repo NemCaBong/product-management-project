@@ -85,6 +85,9 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
 
   // làm thanh scroll xuống dưới sau khi hiển thị xong
   innerBody.scrollTop = innerBody.scrollHeight;
+  // Image cái ảnh vừa mới gửi
+  // chỉ cần lắng nghe cái thẻ div vừa mới tạo ra mà thôi
+  const gallery = new Viewer(div);
 });
 
 // END SERVER_RETURN_MESSAGE
@@ -187,3 +190,10 @@ if (elemListTyping) {
     }
   });
 }
+
+// Preview Full Image
+const chatBody = document.querySelector(".chat .inner-body");
+if (chatBody) {
+  const gallery = new Viewer(chatBody);
+}
+// END preview full image
