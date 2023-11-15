@@ -21,6 +21,7 @@ html
   body 
     include ../partials/header.pug
     +alert-success(3000)
+    
     block main 
 
     include ../partials/footer.pug
@@ -41,7 +42,6 @@ html
     //- viewerjs
     script(src="https://cdnjs.cloudflare.com/ajax/libs/viewerjs/1.11.6/viewer.js") 
 
-    //- js cho việc chat
-    script(type="module" src="/js/chat.js")
-
     script(src="/js/script.js")
+    
+    block script 

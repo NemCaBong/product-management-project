@@ -86,7 +86,7 @@ socket.on("SERVER_RETURN_MESSAGE", (data) => {
   // làm thanh scroll xuống dưới sau khi hiển thị xong
   innerBody.scrollTop = innerBody.scrollHeight;
   // Image cái ảnh vừa mới gửi
-  // chỉ cần lắng nghe cái thẻ div vừa mới tạo ra mà thôi
+  // chỉ cần lắng nghe cái thẻ div vừa mới tạo ra mà thôib
   const gallery = new Viewer(div);
 });
 
