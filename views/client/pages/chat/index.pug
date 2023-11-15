@@ -4,12 +4,12 @@ include ../../mixins/box-head.pug
 block main
   .container.my-3
 
-    
+    include ../../partials/btn-chat-users.pug
+
     .row
       .col-12
         +box-head("Chat")
-    include ../../partials/btn-chat-users.pug
-
+    
     .row
       .col-12
         .chat(my-id=user.id)
