@@ -59,3 +59,16 @@ if (listBtnAcceptFriends.length > 0) {
 }
 
 // Chap nhan yc kết bạn
+
+// Nhận về số lượng người kết bạn
+const badgeUserAccept = document.querySelector("[badge-users-accept]");
+if (badgeUserAccept) {
+  const userID = badgeUserAccept.getAttribute("badge-users-accept");
+  socket.on("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", (data) => {
+    if (userID === data.user_id) {
+      badgeUserAccept.innerHTML = data.lengthAcceptFriends;
+    }
+  });
+}
+
+// Kết thúc nhận số lượng người kết bạn

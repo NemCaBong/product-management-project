@@ -3,10 +3,6 @@ module.exports = (res) => {
   _io.once("connection", (socket) => {
     socket.on("CLIENT_ADD_FRIEND", async (userID) => {
       const myUserID = res.locals.user.id;
-
-      // console.log(myUserID);
-      // console.log(userID);
-
       // Thêm id của A vào acceptFriends của B
 
       // kiểm tra exists A trong B hay chưa
@@ -25,7 +21,6 @@ module.exports = (res) => {
           }
         );
       }
-
       // kết thúc thêm id
 
       // Thêm id của B vào requestFriends của A
@@ -45,7 +40,19 @@ module.exports = (res) => {
         );
       }
 
-      // kết thúc thêm id
+      // Lấy ra số người gửi lời mời kết bạn cho B
+      // và trả về client
+      const infoUserReceiveFriendRequest = await User.findOne({
+        _id: userID,
+      });
+      const lengthAcceptFriends =
+        infoUserReceiveFriendRequest.acceptFriends.length;
+
+      // trả về ID của người đc kết bạn
+      socket.broadcast.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", {
+        user_id: userID,
+        lengthAcceptFriends: lengthAcceptFriends,
+      });
     });
 
     socket.on("CLIENT_CANCEL_FRIEND", async (userID) => {
