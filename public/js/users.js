@@ -43,3 +43,19 @@ if (listBtnRefuseFriends.length > 0) {
 }
 
 // TỪ chối yêu cầu kết bạn
+
+// Chức năng chap nhan yc kết bạn
+const listBtnAcceptFriends = document.querySelectorAll("[btn-accept-friend]");
+if (listBtnAcceptFriends.length > 0) {
+  listBtnAcceptFriends.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const userID = btn.getAttribute("btn-accept-friend");
+
+      btn.closest(".box-user").classList.add("accepted");
+
+      socket.emit("CLIENT_ACCEPT_FRIEND", userID);
+    });
+  });
+}
+
+// Chap nhan yc kết bạn

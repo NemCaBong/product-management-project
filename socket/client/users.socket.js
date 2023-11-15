@@ -4,8 +4,8 @@ module.exports = (res) => {
     socket.on("CLIENT_ADD_FRIEND", async (userID) => {
       const myUserID = res.locals.user.id;
 
-      console.log(myUserID);
-      console.log(userID);
+      // console.log(myUserID);
+      // console.log(userID);
 
       // Thêm id của A vào acceptFriends của B
 
@@ -121,6 +121,59 @@ module.exports = (res) => {
             _id: userID,
           },
           {
+            $pull: { requestFriends: myUserID },
+          }
+        );
+      }
+    });
+
+    socket.on("CLIENT_ACCEPT_FRIEND", async (userID) => {
+      const myUserID = res.locals.user.id;
+
+      // logic xóa tương tự như hủy lời mời kb
+      // Xóa id trong acceptFriends của ng đc nhận lmkb
+      // Thêm bạn vào friendList với room_chat_id
+      const existsIDinAcceptFriends = await User.findOne({
+        _id: myUserID,
+        acceptFriends: userID,
+      });
+
+      if (existsIDinAcceptFriends) {
+        await User.updateOne(
+          {
+            _id: myUserID,
+          },
+          {
+            $push: {
+              friendList: {
+                user_id: userID,
+                room_chat_id: "",
+              },
+            },
+            $pull: { acceptFriends: userID },
+          }
+        );
+      }
+
+      // Thêm bạn vào friendList
+      // Xóa id trong requestFriends của người gửi kban
+      const existsIDinRequestFriends = await User.findOne({
+        _id: userID,
+        requestFriends: myUserID,
+      });
+
+      if (existsIDinRequestFriends) {
+        await User.updateOne(
+          {
+            _id: userID,
+          },
+          {
+            $push: {
+              friendList: {
+                user_id: myUserID,
+                room_chat_id: "",
+              },
+            },
             $pull: { requestFriends: myUserID },
           }
         );
