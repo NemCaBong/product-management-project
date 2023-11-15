@@ -4,4 +4,5 @@ const router = express.Router();
 
 router.get("/not-friend", controller.notFriend);
 
+router.get("/request", controller.request);
 module.exports = router;

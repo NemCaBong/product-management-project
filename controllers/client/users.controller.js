@@ -31,3 +31,26 @@ module.exports.notFriend = async (req, res) => {
     users: users,
   });
 };
+
+module.exports.request = async (req, res) => {
+  // socket
+  usersSocket(res);
+  // end socket
+
+  const userID = res.locals.user.id;
+
+  const myUser = await User.findOne({
+    _id: userID,
+  });
+
+  const users = await User.find({
+    _id: { $in: myUser.requestFriends },
+    status: "active",
+    deleted: false,
+  }).select("id avatar fullName");
+
+  res.render("client/pages/users/request.pug", {
+    pageTitle: "Lời mời đã gửi",
+    users: users,
+  });
+};
