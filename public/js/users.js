@@ -27,3 +27,19 @@ if (listBtnCancelFriends.length > 0) {
 }
 
 // Hủy gửi yêu cầu kết bạn
+
+// Chức năng từ chối yc kết bạn
+const listBtnRefuseFriends = document.querySelectorAll("[btn-refuse-friend]");
+if (listBtnRefuseFriends.length > 0) {
+  listBtnRefuseFriends.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const userID = btn.getAttribute("btn-refuse-friend");
+
+      btn.closest(".box-user").classList.add("refuse");
+
+      socket.emit("CLIENT_REFUSE_FRIEND", userID);
+    });
+  });
+}
+
+// TỪ chối yêu cầu kết bạn

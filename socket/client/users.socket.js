@@ -87,5 +87,44 @@ module.exports = (res) => {
         );
       }
     });
+
+    socket.on("CLIENT_REFUSE_FRIEND", async (userID) => {
+      const myUserID = res.locals.user.id;
+
+      // Xóa id trong acceptFriends của ng đc nhận lmkb
+
+      const existsIDinAcceptFriends = await User.findOne({
+        _id: myUserID,
+        acceptFriends: userID,
+      });
+
+      if (existsIDinAcceptFriends) {
+        await User.updateOne(
+          {
+            _id: myUserID,
+          },
+          {
+            $pull: { acceptFriends: userID },
+          }
+        );
+      }
+
+      // Xóa id trong requestFriends của người gửi kban
+      const existsIDinRequestFriends = await User.findOne({
+        _id: userID,
+        requestFriends: myUserID,
+      });
+
+      if (existsIDinRequestFriends) {
+        await User.updateOne(
+          {
+            _id: userID,
+          },
+          {
+            $pull: { requestFriends: myUserID },
+          }
+        );
+      }
+    });
   });
 };
