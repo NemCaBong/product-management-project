@@ -93,6 +93,19 @@ module.exports = (res) => {
           }
         );
       }
+
+      // Trả về số lượng người gửi lời mời kết bạn
+      const infoUserReceiveFriendRequest = await User.findOne({
+        _id: userID,
+      });
+      const lengthAcceptFriends =
+        infoUserReceiveFriendRequest.acceptFriends.length;
+
+      // trả về ID của người đc kết bạn
+      socket.broadcast.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", {
+        user_id: userID,
+        lengthAcceptFriends: lengthAcceptFriends,
+      });
     });
 
     socket.on("CLIENT_REFUSE_FRIEND", async (userID) => {

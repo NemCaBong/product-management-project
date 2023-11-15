@@ -70,5 +70,4 @@ if (badgeUserAccept) {
     }
   });
 }
-
 // Kết thúc nhận số lượng người kết bạn
