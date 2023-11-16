@@ -66,6 +66,8 @@ module.exports = (res) => {
       });
     });
 
+    // Lo liệu phần hủy gửi lời mời kết bạn
+    // hủy khác với từ chối lmkban
     socket.on("CLIENT_CANCEL_FRIEND", async (userID) => {
       const myUserID = res.locals.user.id;
 
@@ -116,6 +118,13 @@ module.exports = (res) => {
       socket.broadcast.emit("SERVER_RETURN_LENGTH_ACCEPT_FRIEND", {
         user_id: userID,
         lengthAcceptFriends: lengthAcceptFriends,
+      });
+
+      // Gửi thông tin người hủy kết bạn
+      // và người bị hủy
+      socket.broadcast.emit("SERVER_RETURN_USER_ID_CANCEL_FRIEND", {
+        userIDReceiver: userID,
+        userIDSender: myUserID,
       });
     });
 

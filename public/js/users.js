@@ -111,6 +111,11 @@ if (dataUserAccept) {
       // vẽ user ra giao diện
       const div = document.createElement("div");
       div.classList.add("col-6");
+
+      // set thêm id của người gửi lời mời vào div
+      // để nếu có truy vấn lại về sender
+      div.setAttribute("sender-id", data.infoUserSender._id);
+
       div.innerHTML = `
         <div class="box-user">
           <div class="inner-avatar">
@@ -151,7 +156,6 @@ if (dataUserAccept) {
           </div>
         </div>
       `;
-
       dataUserAccept.appendChild(div);
       // hết vẽ giao diện
 
@@ -169,3 +173,18 @@ if (dataUserAccept) {
 }
 
 // END SERVER_RETURN_INFO_ACCEPT_FRIEND
+
+// SERVER_RETURN_USER_ID_CANCEL_FRIEND
+socket.on("SERVER_RETURN_USER_ID_CANCEL_FRIEND", (data) => {
+  const userIDSender = data.userIDSender;
+  const boxSenderRemove = document.querySelector(
+    `[sender-id='${userIDSender}']`
+  );
+  if (boxSenderRemove) {
+    const userIDReceiver = badgeUserAccept.getAttribute("badge-users-accept");
+    const dataUserAccept = document.querySelector("[data-users-accept]");
+    if (userIDReceiver === data.userIDReceiver)
+      dataUserAccept.removeChild(boxSenderRemove);
+  }
+});
+// END SERVER_RETURN_USER_ID_CANCEL_FRIEND
