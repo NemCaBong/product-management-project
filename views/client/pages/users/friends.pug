@@ -1,0 +1,35 @@
+extends ../../layouts/default.pug
+include ../../mixins/box-head.pug
+
+block main
+  .container.my-3
+
+    include ../../partials/btn-chat-users.pug
+
+    .row
+      .col-12
+        +box-head("Danh sách bạn bè")
+
+    .row
+      each friend in friends
+        .col-6
+          div(class="box-user add")
+            div(class="inner-avatar")
+              img(
+                src=(friend.avatar ? friend.avatar : "/images/avatar.png")
+                alt=friend.fullName
+              )
+            div(class="inner-info")
+              div(class="inner-name") #{friend.fullName}
+              div(class="inner-buttons")
+                a(
+                  class="btn btn-sm btn-primary mr-1"
+                  href="#"
+                ) Kết bạn
+            div(
+              class="inner-status"
+              status=friend.statusOnline
+            ) <i class="fa-solid fa-circle"></i>
+
+block script
+  script( src="/js/users.js")

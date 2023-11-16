@@ -107,12 +107,31 @@ module.exports.loginPost = async (req, res) => {
   // trả ra token vào cookies
   res.cookie("tokenUser", user.tokenUser);
 
+  // cho user thành trạng thái online
+  await User.updateOne(
+    {
+      tokenUser: user.tokenUser,
+    },
+    {
+      statusOnline: "online",
+    }
+  );
+
   // trở về trang chủ
   res.redirect("/");
 };
 
 // [GET] /user/logout
 module.exports.logout = async (req, res) => {
+  // đổi trạng thái thành offline
+  await User.updateOne(
+    {
+      tokenUser: req.cookies.tokenUser,
+    },
+    {
+      statusOnline: "offline",
+    }
+  );
   // Xóa token trong cookies
   res.clearCookie("tokenUser");
   // xóa cartID
