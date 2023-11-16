@@ -57,6 +57,12 @@ module.exports = (res) => {
       // lấy info của người gửi trả về cho ng nhận lmkban
       const infoUserSender = await User.findOne({
         _id: myUserID,
+      }).select("id avatar fullName");
+
+      // gửi về thông tin người mình đang gửi lmkb
+      socket.broadcast.emit("SERVER_RETURN_INFO_ACCEPT_FRIEND", {
+        userID: userID,
+        infoUserSender: infoUserSender,
       });
     });
 

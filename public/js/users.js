@@ -1,3 +1,8 @@
+/**
+ * File này để lo liệu các sự kiện socket
+ * Từ server trả về cho bên phía client
+ */
+
 // Chức năng gửi yêu cầu kết bạn
 const listBtnAddFriends = document.querySelectorAll("[btn-add-friend]");
 if (listBtnAddFriends.length > 0) {
@@ -61,6 +66,7 @@ if (listBtnAcceptFriends.length > 0) {
 // Chap nhan yc kết bạn
 
 // Nhận về số lượng người kết bạn
+// SERVER_RETURN_LENGTH_ACCEPT_FRIEND
 const badgeUserAccept = document.querySelector("[badge-users-accept]");
 if (badgeUserAccept) {
   const userID = badgeUserAccept.getAttribute("badge-users-accept");
@@ -70,4 +76,96 @@ if (badgeUserAccept) {
     }
   });
 }
+// END SERVER_RETURN_LENGTH_ACCEPT_FRIEND
 // Kết thúc nhận số lượng người kết bạn
+
+// Chức năng từ chối kết bạn
+const refuseFriend = (button) => {
+  button.addEventListener("click", () => {
+    button.closest(".box-user").classList.add("refuse");
+
+    const userId = button.getAttribute("btn-refuse-friend");
+
+    socket.emit("CLIENT_REFUSE_FRIEND", userId);
+  });
+};
+// Chức năng chấp nhận kết bạn
+const acceptFriend = (button) => {
+  button.addEventListener("click", () => {
+    button.closest(".box-user").classList.add("accepted");
+
+    const userId = button.getAttribute("btn-accept-friend");
+
+    socket.emit("CLIENT_ACCEPT_FRIEND", userId);
+  });
+};
+
+// SERVER_RETURN_INFO_ACCEPT_FRIEND
+// Trả về thông tin của người gửi yêu cầu kết bạn
+const dataUserAccept = document.querySelector("[data-users-accept]");
+if (dataUserAccept) {
+  const userIDOfSender = dataUserAccept.getAttribute("data-users-accept");
+
+  socket.on("SERVER_RETURN_INFO_ACCEPT_FRIEND", (data) => {
+    if (userIDOfSender === data.userID) {
+      // vẽ user ra giao diện
+      const div = document.createElement("div");
+      div.classList.add("col-6");
+      div.innerHTML = `
+        <div class="box-user">
+          <div class="inner-avatar">
+            <img src="/images/avatar.png" alt="${data.infoUserSender.fullName}">
+          </div>
+          <div class="inner-info">
+            <div class="inner-name">
+            ${data.infoUserSender.fullName}
+            </div>
+            <div class="inner-buttons">
+              <button
+                class="btn btn-sm btn-primary mr-1"
+                btn-accept-friend="${data.infoUserSender._id}"
+              >
+                Chấp nhận
+              </button>
+              <button
+                class="btn btn-sm btn-secondary mr-1"
+                btn-refuse-friend="${data.infoUserSender._id}"
+              >
+                Xóa
+              </button>
+              <button
+                class="btn btn-sm btn-secondary mr-1"
+                btn-deleted-friend=""
+                disabled=""
+              >
+                Đã xóa
+              </button>
+              <button
+                class="btn btn-sm btn-primary mr-1"
+                btn-accepted-friend=""
+                disabled=""
+              >
+                Đã chấp nhận
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+
+      dataUserAccept.appendChild(div);
+      // hết vẽ giao diện
+
+      // Hủy lời mời kết bạn
+      const buttonRefuse = div.querySelector("[btn-refuse-friend]");
+      refuseFriend(buttonRefuse);
+      // Hết Hủy lời mời kết bạn
+
+      // Chấp nhận lời mời kết bạn
+      const buttonAccept = div.querySelector("[btn-accept-friend]");
+      acceptFriend(buttonAccept);
+      // Hết Chấp nhận lời mời kết bạn
+    }
+  });
+}
+
+// END SERVER_RETURN_INFO_ACCEPT_FRIEND
