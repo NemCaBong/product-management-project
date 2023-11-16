@@ -22,7 +22,6 @@ module.exports.notFriend = async (req, res) => {
       { _id: { $nin: acceptFriends } },
     ],
     // lấy ra các user không phải user hiện tại
-    _id: { $nin: requestFriends },
     status: "active",
     deleted: false,
   }).select("id avatar fullName");

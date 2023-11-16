@@ -241,7 +241,37 @@ module.exports.resetPasswordPost = async (req, res) => {
 
 // [GET] /user/info
 module.exports.info = async (req, res) => {
+  const user = res.locals.user;
+  const friendListIDArr = user.friendList.map((obj) => obj.user_id);
+
+  const friendList = await User.find({
+    _id: { $in: friendListIDArr },
+  }).select("fullName");
   res.render("client/pages/user/info", {
     pageTitle: "Thông tin tài khoản",
+    friendList: friendList,
   });
+};
+
+// [GET] /user/edit
+module.exports.edit = async (req, res) => {
+  res.render("client/pages/user/edit", {
+    pageTitle: "Chỉnh sửa tài khoản",
+  });
+};
+
+// [PATCH] /user/edit
+module.exports.editPatch = async (req, res) => {
+  const user = res.locals.user;
+
+  await User.updateOne(
+    {
+      _id: user.id,
+    },
+    {
+      ...req.body,
+    }
+  );
+
+  res.redirect("/user/info");
 };

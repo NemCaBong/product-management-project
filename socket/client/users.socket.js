@@ -53,6 +53,11 @@ module.exports = (res) => {
         user_id: userID,
         lengthAcceptFriends: lengthAcceptFriends,
       });
+
+      // lấy info của người gửi trả về cho ng nhận lmkban
+      const infoUserSender = await User.findOne({
+        _id: myUserID,
+      });
     });
 
     socket.on("CLIENT_CANCEL_FRIEND", async (userID) => {

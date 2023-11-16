@@ -4,6 +4,13 @@ const router = express.Router();
 const userValidate = require("../../validates/client/user.validate");
 const authenMiddleware = require("../../middlewares/client/authen.middleware");
 
+// multer
+const multer = require("multer");
+// return multer instance
+const upload = multer();
+const uploadCloud = require("../../middlewares/admin/uploadCloud.middleware");
+// end multer
+
 // Phần đường dẫn register
 router.get("/register", controller.register);
 router.post("/register", userValidate.registerPost, controller.registerPost);
@@ -33,4 +40,13 @@ router.post(
 
 router.get("/info", authenMiddleware.requireAuth, controller.info);
 
+router.get("/edit", authenMiddleware.requireAuth, controller.edit);
+
+router.patch(
+  "/edit",
+  authenMiddleware.requireAuth,
+  upload.single("avatar"),
+  uploadCloud.upload,
+  controller.editPatch
+);
 module.exports = router;
