@@ -102,11 +102,11 @@ const acceptFriend = (button) => {
 
 // SERVER_RETURN_INFO_ACCEPT_FRIEND
 // Trả về thông tin của người gửi yêu cầu kết bạn
-const dataUserAccept = document.querySelector("[data-users-accept]");
-if (dataUserAccept) {
-  const userIDOfSender = dataUserAccept.getAttribute("data-users-accept");
-
-  socket.on("SERVER_RETURN_INFO_ACCEPT_FRIEND", (data) => {
+socket.on("SERVER_RETURN_INFO_ACCEPT_FRIEND", (data) => {
+  // trang lời mời kết bạn
+  const dataUserAccept = document.querySelector("[data-users-accept]");
+  if (dataUserAccept) {
+    const userIDOfSender = dataUserAccept.getAttribute("data-users-accept");
     if (userIDOfSender === data.userID) {
       // vẽ user ra giao diện
       const div = document.createElement("div");
@@ -114,7 +114,7 @@ if (dataUserAccept) {
 
       // set thêm id của người gửi lời mời vào div
       // để nếu có truy vấn lại về sender
-      div.setAttribute("sender-id", data.infoUserSender._id);
+      div.setAttribute("user-id", data.infoUserSender._id);
 
       div.innerHTML = `
         <div class="box-user">
@@ -169,20 +169,39 @@ if (dataUserAccept) {
       acceptFriend(buttonAccept);
       // Hết Chấp nhận lời mời kết bạn
     }
-  });
-}
+  }
+  // kết thúc trang lời mời kết bạn
+
+  // trang danh sách người dùng
+  const dataUsersNotFriend = document.querySelector("[data-users-not-friend]");
+  if (dataUsersNotFriend) {
+    // nếu đây đúng là trang của người đc nhận lời mời
+    const receiverID = dataUsersNotFriend.getAttribute("data-users-not-friend");
+    if (receiverID === data.userID) {
+      // tìm ở trong giao diện có người gửi hay ko
+      // để xóa đi
+      const boxOfSender = dataUsersNotFriend.querySelector(
+        `[user-id='${data.infoUserSender._id}']`
+      );
+      if (boxOfSender) {
+        dataUsersNotFriend.removeChild(boxOfSender);
+      }
+    }
+  }
+});
 
 // END SERVER_RETURN_INFO_ACCEPT_FRIEND
 
 // SERVER_RETURN_USER_ID_CANCEL_FRIEND
 socket.on("SERVER_RETURN_USER_ID_CANCEL_FRIEND", (data) => {
   const userIDSender = data.userIDSender;
-  const boxSenderRemove = document.querySelector(
-    `[sender-id='${userIDSender}']`
-  );
+  const boxSenderRemove = document.querySelector(`[user-id='${userIDSender}']`);
+  console.log(boxSenderRemove);
   if (boxSenderRemove) {
     const userIDReceiver = badgeUserAccept.getAttribute("badge-users-accept");
     const dataUserAccept = document.querySelector("[data-users-accept]");
+    // chắc chắn đây là trang lời mời kết bạn
+    // của thằng người nhận (bởi vì có badge để đếm)
     if (userIDReceiver === data.userIDReceiver)
       dataUserAccept.removeChild(boxSenderRemove);
   }
