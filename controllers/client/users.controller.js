@@ -14,12 +14,14 @@ module.exports.notFriend = async (req, res) => {
 
   const requestFriends = myUser.requestFriends;
   const acceptFriends = myUser.acceptFriends;
+  const friendListID = myUser.friendList.map((friend) => friend.user_id);
 
   const users = await User.find({
     $and: [
       { _id: { $ne: userID } },
       { _id: { $nin: requestFriends } },
       { _id: { $nin: acceptFriends } },
+      { _id: { $nin: friendListID } },
     ],
     // lấy ra các user không phải user hiện tại
     status: "active",
