@@ -2,15 +2,18 @@ const Chat = require("../../models/chat.model");
 
 const uploadToCloudinary = require("../../helpers/uploadToCloudinary");
 
-module.exports = (res) => {
+module.exports = (req, res) => {
   // lấy ra userid theo res.locals
   // bởi đã force phải có res.locals.user trong file auth.middleware
   const userID = res.locals.user.id;
   const fullName = res.locals.user.fullName;
 
+  const roomChatID = req.params.roomChatID;
+
   // dùng biến _io của global
   // socket.io
   _io.once("connection", (socket) => {
+    socket.join(roomChatID);
     socket.on("CLIENT_SEND_MESSAGE", async (data) => {
       // data.images: sẽ đc lưu ở dạng các buffer
       let images = [];
@@ -24,6 +27,7 @@ module.exports = (res) => {
         user_id: userID,
         content: data.content,
         images: images,
+        room_chat_id: roomChatID,
       });
 
       // lưu đoạn code vào db.
@@ -31,7 +35,7 @@ module.exports = (res) => {
 
       // sau khi lưu vào database xong thì chúng ta trả lại
       // cái tin nhắn cho client side để nó hiển thị realtime.
-      _io.emit("SERVER_RETURN_MESSAGE", {
+      _io.to(roomChatID).emit("SERVER_RETURN_MESSAGE", {
         fullName: fullName,
         user_id: userID,
         content: data.content,
@@ -43,7 +47,7 @@ module.exports = (res) => {
     socket.on("CLIENT_SEND_TYPING", async (type) => {
       // trả về giá trị người dùng đang type cho tất cả
       // những người khác ngoài người đang type
-      socket.broadcast.emit("SERVER_RETURN_TYPING", {
+      socket.to(roomChatID).emit("SERVER_RETURN_TYPING", {
         user_id: userID,
         type: type,
         fullName: fullName,

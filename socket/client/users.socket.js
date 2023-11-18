@@ -1,4 +1,5 @@
 const User = require("../../models/user.model");
+const RoomChat = require("../../models/rooms-chat.model");
 module.exports = (res) => {
   _io.once("connection", (socket) => {
     socket.on("CLIENT_ADD_FRIEND", async (userID) => {
@@ -170,30 +171,11 @@ module.exports = (res) => {
     socket.on("CLIENT_ACCEPT_FRIEND", async (userID) => {
       const myUserID = res.locals.user.id;
 
-      // logic xóa tương tự như hủy lời mời kb
-      // Xóa id trong acceptFriends của ng đc nhận lmkb
-      // Thêm bạn vào friendList với room_chat_id
+      // check tồn tại
       const existsIDinAcceptFriends = await User.findOne({
         _id: myUserID,
         acceptFriends: userID,
       });
-
-      if (existsIDinAcceptFriends) {
-        await User.updateOne(
-          {
-            _id: myUserID,
-          },
-          {
-            $push: {
-              friendList: {
-                user_id: userID,
-                room_chat_id: "",
-              },
-            },
-            $pull: { acceptFriends: userID },
-          }
-        );
-      }
 
       // Thêm bạn vào friendList
       // Xóa id trong requestFriends của người gửi kban
@@ -202,7 +184,41 @@ module.exports = (res) => {
         requestFriends: myUserID,
       });
 
-      if (existsIDinRequestFriends) {
+      let roomChat;
+
+      if (existsIDinAcceptFriends && existsIDinRequestFriends) {
+        const roomData = {
+          typeRoom: "friend",
+          users: [
+            {
+              user_id: myUserID,
+              role: "superAdmin",
+            },
+            {
+              user_id: userID,
+              role: "superAdmin",
+            },
+          ],
+        };
+
+        roomChat = new RoomChat(roomData);
+        roomChat.save();
+
+        await User.updateOne(
+          {
+            _id: myUserID,
+          },
+          {
+            $push: {
+              friendList: {
+                user_id: userID,
+                room_chat_id: roomChat.id,
+              },
+            },
+            $pull: { acceptFriends: userID },
+          }
+        );
+
         await User.updateOne(
           {
             _id: userID,
@@ -211,7 +227,7 @@ module.exports = (res) => {
             $push: {
               friendList: {
                 user_id: myUserID,
-                room_chat_id: "",
+                room_chat_id: roomChat.id,
               },
             },
             $pull: { requestFriends: myUserID },

@@ -2,14 +2,18 @@ const Chat = require("../../models/chat.model");
 const User = require("../../models/user.model");
 
 const chatSocket = require("../../socket/client/chat.socket");
-// [GET] /chat
+
+// [GET] /chat/:roomChatID
 module.exports.index = async (req, res) => {
+  const roomChatID = req.params.roomChatID;
+
   // Handle chatting using socket.
-  chatSocket(res);
+  chatSocket(req, res);
   // end Socket.io
 
   const chats = await Chat.find({
     deleted: false,
+    room_chat_id: roomChatID,
   });
 
   for (let chat of chats) {
@@ -17,6 +21,7 @@ module.exports.index = async (req, res) => {
       _id: chat.user_id,
       deleted: false,
     }).select("fullName");
+
     // gán thêm infoUser cho đoạn tin nhắn
     chat.infoUser = infoUser;
   }
