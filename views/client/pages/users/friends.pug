@@ -10,9 +10,9 @@ block main
       .col-12
         +box-head("Danh sách bạn bè")
 
-    .row
+    .row(data-user-friends)
       each friend in friends
-        .col-6
+        .col-6(user-id=friend.id)
           div(class="box-user add")
             div(class="inner-avatar")
               img(

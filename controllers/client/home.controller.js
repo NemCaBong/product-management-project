@@ -12,12 +12,13 @@ module.exports.index = async (req, res) => {
   const newFeaturedProducts = productsHelper.productsPrice(featuredProducts);
 
   // lấy ra danh sách sản phẩm mới nhất (theo position)
-  const newProducts = await Product.find({
+  let newProducts = await Product.find({
     deleted: false,
     status: "active",
   })
     .sort({ position: "desc" })
     .limit(6);
+  newProducts = productsHelper.productsPrice(newProducts);
 
   res.render("client/pages/home/index.pug", {
     pageTitle: "Trang chủ",

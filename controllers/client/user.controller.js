@@ -117,6 +117,14 @@ module.exports.loginPost = async (req, res) => {
     }
   );
 
+  // trả về online khi đã đăng nhập
+  _io.once("connection", (socket) => {
+    socket.broadcast.emit("SERVER_RETURN_USER_STATUS_ONLINE", {
+      userID: user.id,
+      status: "online",
+    });
+  });
+
   // trở về trang chủ
   res.redirect("/");
 };
@@ -136,6 +144,15 @@ module.exports.logout = async (req, res) => {
   res.clearCookie("tokenUser");
   // xóa cartID
   res.clearCookie("cartID");
+
+  // trả về offline khi đã đăng nhập
+  _io.once("connection", (socket) => {
+    socket.broadcast.emit("SERVER_RETURN_USER_STATUS_ONLINE", {
+      userID: res.locals.user.id,
+      status: "offline",
+    });
+  });
+
   res.redirect("/");
 };
 

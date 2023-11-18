@@ -1,4 +1,5 @@
 /**
+ * Đây chính là bên phía client
  * File này để lo liệu các sự kiện socket
  * Từ server trả về cho bên phía client
  */
@@ -196,7 +197,6 @@ socket.on("SERVER_RETURN_INFO_ACCEPT_FRIEND", (data) => {
 socket.on("SERVER_RETURN_USER_ID_CANCEL_FRIEND", (data) => {
   const userIDSender = data.userIDSender;
   const boxSenderRemove = document.querySelector(`[user-id='${userIDSender}']`);
-  console.log(boxSenderRemove);
   if (boxSenderRemove) {
     const userIDReceiver = badgeUserAccept.getAttribute("badge-users-accept");
     const dataUserAccept = document.querySelector("[data-users-accept]");
@@ -207,3 +207,21 @@ socket.on("SERVER_RETURN_USER_ID_CANCEL_FRIEND", (data) => {
   }
 });
 // END SERVER_RETURN_USER_ID_CANCEL_FRIEND
+
+// SERVER_RETURN_USER_ONLINE
+socket.on("SERVER_RETURN_USER_STATUS_ONLINE", (data) => {
+  const dataUserFriends = document.querySelector("[data-user-friends]");
+  // Nếu trong trang friends: danh sách bạn bè
+  if (dataUserFriends) {
+    // Nếu trong dsach bạn bè có ông mới online
+    const onlineUserInFriend = dataUserFriends.querySelector(
+      `[user-id='${data.userID}']`
+    );
+    if (onlineUserInFriend) {
+      const boxStatus = onlineUserInFriend.querySelector("[status]");
+      boxStatus.setAttribute("status", data.status);
+    }
+  }
+});
+
+// END SERVER_RETURN_USER_ONLINE
