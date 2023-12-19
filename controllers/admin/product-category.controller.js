@@ -1,4 +1,5 @@
 const ProductCategory = require("../../models/product-category.model");
+const Account = require("../../models/account.model");
 const systemConfig = require("../../config/system");
 
 const filterStatusHelper = require("../../helpers/filterStatus");
@@ -43,7 +44,8 @@ module.exports.index = async (req, res) => {
 
   const productCategories = await ProductCategory.find(find).sort(sort);
 
-  // hiển thị ra tree danh mục khi nào
+  // hiển thị ra tree danh mục khi
+  // không có search và tìm kiếm
   let newRecords = {};
   if (objectSearch.keyword || (req.query.sortKey && req.query.sortValue)) {
     newRecords = productCategories;
@@ -51,6 +53,26 @@ module.exports.index = async (req, res) => {
     newRecords = createTreeHelper.tree(productCategories);
   }
   // kết thúc điều kiện hiển thị
+
+  for (const category of newRecords) {
+    const user = await Account.findOne({
+      _id: category.createdBy.account_id,
+    });
+
+    if (user) {
+      category.accountFullName = user.fullName;
+    }
+
+    const updatedBy = category.updatedBy.slice(-1)[0];
+
+    if (updatedBy) {
+      const updatedUser = await Account.findOne({
+        _id: updatedBy.account_id,
+      });
+
+      updatedBy.accountFullName = updatedUser.fullName;
+    }
+  }
 
   res.render("admin/pages/product-category/index", {
     pageTitle: "Danh mục sản phẩm",

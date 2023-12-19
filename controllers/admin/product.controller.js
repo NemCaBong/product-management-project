@@ -64,8 +64,8 @@ module.exports.index = async (req, res) => {
       product.accountFullName = user.fullName;
     }
 
-    // lấy ra thông tin người chỉnh sửa gần nhất
-
+    //lấy ra thông tin người chỉnh sửa gần nhất
+    // updatedBy thay đổi => product cx thay đổi.
     const updatedBy = product.updatedBy.slice(-1)[0];
 
     if (updatedBy) {
@@ -220,7 +220,6 @@ module.exports.createPost = async (req, res) => {
   req.body.createdBy = {
     account_id: res.locals.user.id,
   };
-  console.log(req.body);
 
   const newProduct = new Product(req.body);
   // save to DB
