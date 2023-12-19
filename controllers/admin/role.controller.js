@@ -113,11 +113,11 @@ module.exports.permissionsPatch = async (req, res) => {
 // [GET] admin/roles/detail/:id
 module.exports.detail = async (req, res) => {
   try {
-    let find = {
+    const roleID = req.params.id;
+    const role = await Role.findOne({
       deleted: false,
-      _id: res.locals.user.id,
-    };
-    const role = await Role.findOne(find);
+      _id: roleID,
+    });
 
     let permissionsName = {
       "products-category": "Danh mục sản phẩm",
@@ -149,10 +149,12 @@ module.exports.detail = async (req, res) => {
     }
 
     res.render("admin/pages/roles/detail", {
+      userRole: res.locals.role,
       role: role,
       rolePermissions: permissionOfRole,
     });
   } catch (err) {
+    console.log(err);
     req.flash("error", "Xem chi tiết nhóm quyền thất bại");
     res.redirect(`${systemConfig.prefixAdmin}/roles`);
   }
