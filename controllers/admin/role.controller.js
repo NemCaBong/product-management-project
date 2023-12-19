@@ -115,7 +115,7 @@ module.exports.detail = async (req, res) => {
   try {
     let find = {
       deleted: false,
-      _id: req.params.id,
+      _id: res.locals.user.id,
     };
     const role = await Role.findOne(find);
 
@@ -123,6 +123,7 @@ module.exports.detail = async (req, res) => {
       "products-category": "Danh mục sản phẩm",
       products: "Sản phẩm",
       roles: "Nhóm quyền",
+      accounts: "Tài khoản",
     };
 
     let permissionsAct = {
@@ -153,7 +154,7 @@ module.exports.detail = async (req, res) => {
     });
   } catch (err) {
     req.flash("error", "Xem chi tiết nhóm quyền thất bại");
-    res.render(`${systemConfig.prefixAdmin}/roles`);
+    res.redirect(`${systemConfig.prefixAdmin}/roles`);
   }
 };
 
