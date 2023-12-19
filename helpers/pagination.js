@@ -16,5 +16,5 @@ module.exports = (query, totalItems) => {
   // sản phẩm bắt đầu lấy
   objectPagination.skip =
     (objectPagination.currentPage - 1) * objectPagination.limitItems;
-  return objectPagination
+  return objectPagination;
 };
