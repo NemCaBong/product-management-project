@@ -46,7 +46,7 @@ module.exports.index = async (req, res) => {
 
   // hiển thị ra tree danh mục khi
   // không có search và tìm kiếm
-  let newRecords = {};
+  let newRecords = [];
   if (objectSearch.keyword || (req.query.sortKey && req.query.sortValue)) {
     newRecords = productCategories;
   } else {
@@ -100,21 +100,17 @@ module.exports.create = async (req, res) => {
 
 // [POST] /admin/product-category/create
 module.exports.createPost = async (req, res) => {
-  // const permissions = res.locals.role.permissions;
-
-  // if(permissions.includes("products-category_create")) {
-  //   console.log("Có quyền");
-  // } else {
-  //   res.send("403");
-  //   return;
-  // }
-
   if (req.body.position === "") {
     const posCount = await ProductCategory.count();
     req.body.position = posCount + 1;
   } else {
     req.body.position = parseInt(req.body.position);
   }
+
+  req.body.createdBy = {
+    account_id: res.locals.user.id,
+    createdAt: new Date(),
+  };
 
   const newProductCategory = new ProductCategory(req.body);
   await newProductCategory.save();
@@ -152,15 +148,16 @@ module.exports.editPatch = async (req, res) => {
   req.body.position = parseInt(req.body.position);
 
   try {
+    const updatedBy = {
+      account_id: res.locals.user.id,
+      updatedAt: new Date(),
+    };
     await ProductCategory.updateOne(
       { _id: id },
       {
         ...req.body,
         $push: {
-          updatedBy: {
-            account_id: res.locals.user.id,
-            updatedAt: new Date(),
-          },
+          updatedBy: updatedBy,
         },
       }
     );

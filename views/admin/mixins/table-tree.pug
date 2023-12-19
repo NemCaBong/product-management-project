@@ -59,10 +59,9 @@ mixin table-tree(records, level = 1)
             ) Dừng hoạt động
       td 
         - const createdAt = item.createdBy.createdAt
-        p #{item.accountFullName}
         if (createdAt)
+          p #{item.accountFullName}
           p
-            #{createdAt}
             +formatDateTime(createdAt)
       td
         - const updatedBy = item.updatedBy.slice(-1)[0]

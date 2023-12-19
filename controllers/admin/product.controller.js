@@ -219,6 +219,7 @@ module.exports.createPost = async (req, res) => {
 
   req.body.createdBy = {
     account_id: res.locals.user.id,
+    createdAt: new Date(),
   };
 
   const newProduct = new Product(req.body);
@@ -277,7 +278,6 @@ module.exports.editPatch = async (req, res) => {
     console.log(error);
     req.flash("error", "Cập nhật thất bại!");
   }
-
   res.redirect("back");
 };
 

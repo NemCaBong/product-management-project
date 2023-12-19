@@ -124,7 +124,6 @@ block main
                     p #{item.accountFullName}
                     if (createdAt)
                       p
-                        #{createdAt}
                         +formatDateTime(createdAt)
                   td
                     - const updatedBy = item.updatedBy.slice(-1)[0]
