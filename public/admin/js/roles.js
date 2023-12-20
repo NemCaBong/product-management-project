@@ -35,10 +35,6 @@ if (tablePermissions) {
       } else {
         inputs.forEach((input, index) => {
           const checked = input.checked;
-          // console.log(name);
-          // console.log(index);
-          // console.log(checked);
-          // console.log("---------------------------");
           if (checked) {
             permissions[index].permissions.push(name);
           }
@@ -61,7 +57,7 @@ if (tablePermissions) {
 }
 // end permissions
 
-// /permissions default permissions
+// default permissions display
 const dataRecords = document.querySelector("[data-records]");
 if (dataRecords) {
   // lấy ra all bản ghi roles trong DB
@@ -78,4 +74,4 @@ if (dataRecords) {
     });
   });
 }
-// end default permission
+// end default permission display

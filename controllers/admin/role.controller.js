@@ -1,5 +1,6 @@
 const systemConfig = require("../../config/system");
 const Role = require("../../models/role.model");
+const Account = require("../../models/account.model");
 
 // [GET] /admin/roles
 module.exports.index = async (req, res) => {
@@ -7,6 +8,30 @@ module.exports.index = async (req, res) => {
     deleted: false,
   };
   const records = await Role.find(find);
+
+  for (const record of records) {
+    // lấy ra thông tin người tạo
+    const user = await Account.findOne({
+      _id: record.createdBy.account_id,
+    });
+
+    // không phải cái nào cx có người tạo
+    if (user) {
+      record.accountFullName = user.fullName;
+    }
+
+    //lấy ra thông tin người chỉnh sửa gần nhất
+    // updatedBy thay đổi => product cx thay đổi.
+    const updatedBy = record.updatedBy.slice(-1)[0];
+
+    if (updatedBy) {
+      const updatedUser = await Account.findOne({
+        _id: updatedBy.account_id,
+      });
+
+      updatedBy.accountFullName = updatedUser.fullName;
+    }
+  }
   res.render("admin/pages/roles/index", {
     pageTitle: "Nhóm quyền",
     records: records,
@@ -23,6 +48,11 @@ module.exports.create = async (req, res) => {
 // [POST] admin/roles/create
 module.exports.createPost = async (req, res) => {
   if (req.body) {
+    req.body.createdBy = {
+      account_id: res.locals.user.id,
+      createdAt: new Date(),
+    };
+
     const record = new Role(req.body);
     await record.save();
   }
@@ -52,21 +82,19 @@ module.exports.editPatch = async (req, res) => {
   try {
     if (req.body) {
       const id = req.params.id;
+      const updatedBy = {
+        account_id: res.locals.user.id,
+        updatedAt: new Date(),
+      };
       await Role.updateOne(
         { _id: id },
         {
           ...req.body,
-          $push: {
-            updatedBy: {
-              account_id: res.locals.user.id,
-              updatedAt: new Date(),
-            },
-          },
+          $push: { updatedBy: updatedBy },
         }
       );
       req.flash("success", "Cập nhật nhóm quyền thành công");
     }
-    // req.flash("error", "Không có dữ liệu để cập nhật");
   } catch (err) {
     req.flash("error", "Cập nhật nhóm quyền thất bại");
     res.redirect("back");
@@ -96,13 +124,18 @@ module.exports.permissionsPatch = async (req, res) => {
     // Khi chúng ta chuyển về dạng Object trong JS thì cần phải .permissons vào.
     const permissions = JSON.parse(req.body.permissions);
     if (permissions) {
+      const updatedBy = {
+        account_id: res.locals.user.id,
+        updatedAt: new Date(),
+      };
       permissions.forEach(async (item) => {
         await Role.updateOne(
           { _id: item.id },
-          { permissions: item.permissions }
+          { permissions: item.permissions, $push: { updatedBy: updatedBy } }
         );
       });
     }
+
     req.flash("success", "Cập nhật phân quyền thành công");
   } catch (err) {
     req.flash("error", "Cập nhật phân quyền thất bại");
