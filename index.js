@@ -35,7 +35,7 @@ app.use(
 );
 
 // config port
-const port = process.env.PORT;
+const port = process.env.PORT || 3000;
 
 // App Local Var
 const systemConfig = require("./config/system");

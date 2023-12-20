@@ -49,29 +49,30 @@ module.exports.index = async (req, res) => {
   let newRecords = [];
   if (objectSearch.keyword || (req.query.sortKey && req.query.sortValue)) {
     newRecords = productCategories;
-  } else {
-    newRecords = createTreeHelper.tree(productCategories);
-  }
-  // kết thúc điều kiện hiển thị
-
-  for (const category of newRecords) {
-    const user = await Account.findOne({
-      _id: category.createdBy.account_id,
-    });
-
-    if (user) {
-      category.accountFullName = user.fullName;
-    }
-
-    const updatedBy = category.updatedBy.slice(-1)[0];
-
-    if (updatedBy) {
-      const updatedUser = await Account.findOne({
-        _id: updatedBy.account_id,
+    for (const category of newRecords) {
+      const user = await Account.findOne({
+        _id: category.createdBy.account_id,
       });
 
-      updatedBy.accountFullName = updatedUser.fullName;
+      if (user) {
+        category.accountFullName = user.fullName;
+      }
+
+      const updatedBy = category.updatedBy.slice(-1)[0];
+
+      if (updatedBy) {
+        const updatedUser = await Account.findOne({
+          _id: updatedBy.account_id,
+        });
+
+        updatedBy.accountFullName = updatedUser.fullName;
+      }
     }
+  } else {
+    newRecords = createTreeHelper.tree(productCategories);
+    newRecords = await createTreeHelper
+      .displayLogs(newRecords)
+      .then((res) => res);
   }
 
   res.render("admin/pages/product-category/index", {
@@ -169,6 +170,7 @@ module.exports.editPatch = async (req, res) => {
   res.redirect(`${systemConfig.prefixAdmin}/product-category`);
 };
 
+// [GET] /admin/product-category/detail/:id
 module.exports.detail = async (req, res) => {
   try {
     const find = {
@@ -194,6 +196,7 @@ module.exports.detail = async (req, res) => {
   }
 };
 
+// [GET] /admin/product-category/delete/:id
 module.exports.delete = async (req, res) => {
   const id = req.params.id;
   await ProductCategory.updateOne(
