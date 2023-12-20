@@ -4,7 +4,6 @@ const systemConfig = require("../../config/system");
 
 const filterStatusHelper = require("../../helpers/filterStatus");
 const searchHelper = require("../../helpers/search");
-const paginationHelper = require("../../helpers/pagination");
 const createTreeHelper = require("../../helpers/createTree");
 
 // [GET] /admin/product-category
@@ -190,12 +189,36 @@ module.exports.detail = async (req, res) => {
   }
 };
 
-// [GET] /admin/product-category/delete/:id
+// [DELETE] /admin/product-category/delete/:id
 module.exports.delete = async (req, res) => {
   const id = req.params.id;
   await ProductCategory.updateOne(
     { _id: id },
     { deleted: true, deletedAt: new Date() }
   );
+  req.flash("success", "Xóa sản phẩm thành công!");
+  res.redirect("back");
+};
+
+// [PATCH] /admin/product-category/change-status/:status/:id
+module.exports.changeStatus = async (req, res) => {
+  const status = req.params.status;
+  const id = req.params.id;
+
+  const updatedBy = {
+    account_id: res.locals.user.id,
+    updatedAt: new Date(),
+  };
+
+  await ProductCategory.updateOne(
+    {
+      _id: id,
+    },
+    {
+      status: status,
+      $push: { updatedBy: updatedBy },
+    }
+  );
+  req.flash("success", "Cập nhật trạng thái thành công");
   res.redirect("back");
 };

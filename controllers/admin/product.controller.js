@@ -130,7 +130,7 @@ module.exports.changeMulti = async (req, res) => {
     case "inactive":
       await Product.updateMany(
         { _id: { $in: ids } },
-        { status: "active", $push: { updatedBy: updatedBy } }
+        { status: "inactive", $push: { updatedBy: updatedBy } }
       );
       req.flash(
         "success",
