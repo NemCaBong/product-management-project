@@ -19,7 +19,7 @@ block main
         class="form-control"
         id="websiteName"
         name="websiteName"
-        value=(settingGeneral ? settingGeneral.websiteName : "")
+        value=(settingsGeneral ? settingsGeneral.websiteName : "")
       )
     div(
       class="form-group"
@@ -35,7 +35,7 @@ block main
         upload-image-input
       )
       img(
-        src=(settingGeneral ? settingGeneral.logo : "")
+        src=(settingsGeneral ? settingsGeneral.logo : "")
         class="image-preview"
         upload-image-preview
       )
@@ -46,7 +46,7 @@ block main
         class="form-control"
         id="phone"
         name="phone"
-        value=(settingGeneral ? settingGeneral.phone : "")
+        value=(settingsGeneral ? settingsGeneral.phone : "")
       )
     div(class="form-group")
       label(for="email") Email
@@ -55,7 +55,7 @@ block main
         class="form-control"
         id="email"
         name="email"
-        value=(settingGeneral ? settingGeneral.email : "")
+        value=(settingsGeneral ? settingsGeneral.email : "")
       )
     div(class="form-group")
       label(for="address") Địa chỉ
@@ -64,7 +64,7 @@ block main
         class="form-control"
         id="address"
         name="address"
-        value=(settingGeneral ? settingGeneral.address : "")
+        value=(settingsGeneral ? settingsGeneral.address : "")
       )
     div(class="form-group")
       label(for="copyright") Copyright
@@ -73,7 +73,7 @@ block main
         class="form-control"
         id="copyright"
         name="copyright"
-        value=(settingGeneral ? settingGeneral.copyright : "")
+        value=(settingsGeneral ? settingsGeneral.copyright : "")
       )
     div(class="form-group")
       button(
