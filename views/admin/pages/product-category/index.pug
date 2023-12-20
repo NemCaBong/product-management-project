@@ -3,6 +3,8 @@ include ../../mixins/table-tree.pug
 include ../../mixins/filter-status.pug
 include ../../mixins/search.pug
 include ../../mixins/pagination.pug
+include ../../mixins/form-change-multi.pug
+
 block main
   if (role.permissions.includes("products-category_view"))
     h1 Danh mục sản phẩm
@@ -37,6 +39,8 @@ block main
         .card-body
           .row
             .col-8
+              if (role.permissions.includes("products-category_edit"))
+                +form-change-multi(`${prefixAdmin}/product-category/change-multi?_method=PATCH`)
             .col-4
               if (role.permissions.includes("products-category_create"))
                 a(

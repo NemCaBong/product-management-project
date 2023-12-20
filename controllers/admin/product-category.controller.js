@@ -192,11 +192,13 @@ module.exports.detail = async (req, res) => {
 // [DELETE] /admin/product-category/delete/:id
 module.exports.delete = async (req, res) => {
   const id = req.params.id;
+
   await ProductCategory.updateOne(
     { _id: id },
     { deleted: true, deletedAt: new Date() }
   );
-  req.flash("success", "Xóa sản phẩm thành công!");
+
+  req.flash("success", "Xóa danh mục và danh mục con thành công!");
   res.redirect("back");
 };
 
@@ -219,6 +221,79 @@ module.exports.changeStatus = async (req, res) => {
       $push: { updatedBy: updatedBy },
     }
   );
+
   req.flash("success", "Cập nhật trạng thái thành công");
+  res.redirect("back");
+};
+
+// [PATCH] /admin/product-category/change-multi
+module.exports.changeMulti = async (req, res) => {
+  const type = req.body.type;
+  const ids = req.body.ids.split(", ");
+
+  const updatedBy = {
+    account_id: res.locals.user.id,
+    updatedAt: new Date(),
+  };
+
+  switch (type) {
+    case "active":
+      await ProductCategory.updateMany(
+        { _id: { $in: ids } },
+        { status: "active", $push: { updatedBy: updatedBy } }
+      );
+      req.flash(
+        "success",
+        `Cập nhật trạng thái của ${ids.length} sản phẩm thành công`
+      );
+      break;
+
+    case "inactive":
+      await ProductCategory.updateMany(
+        { _id: { $in: ids } },
+        { status: "inactive", $push: { updatedBy: updatedBy } }
+      );
+      req.flash(
+        "success",
+        `Cập nhật trạng thái của ${ids.length} sản phẩm thành công`
+      );
+      break;
+
+    case "delete-all":
+      await ProductCategory.updateMany(
+        { _id: { $in: ids } },
+        {
+          deleted: true,
+          deletedBy: {
+            account_id: res.locals.user.id,
+            deletedAt: new Date(),
+          },
+          $push: { updatedBy: updatedBy },
+        }
+      );
+      req.flash("success", `Xóa ${ids.length} sản phẩm thành công`);
+      break;
+
+    case "change-position":
+      for (const item of ids) {
+        let [id, position] = item.split("-");
+
+        position = parseInt(position);
+
+        await ProductCategory.updateOne(
+          { _id: id },
+          {
+            position: position,
+            $push: { updatedBy: updatedBy },
+          }
+        );
+        req.flash("success", `Đổi vị trí ${ids.length} sản phẩm thành công`);
+      }
+      break;
+
+    default:
+      break;
+  }
+
   res.redirect("back");
 };

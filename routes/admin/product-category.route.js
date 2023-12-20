@@ -34,4 +34,6 @@ router.get("/detail/:id", controller.detail);
 router.delete("/delete/:id", controller.delete);
 
 router.patch("/change-status/:status/:id", controller.changeStatus);
+
+router.patch("/change-multi", controller.changeMulti);
 module.exports = router;
