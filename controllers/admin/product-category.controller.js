@@ -37,11 +37,6 @@ module.exports.index = async (req, res) => {
   }
   // het tim kiem
 
-  // Phan phan trang
-  const totalItems = await ProductCategory.count(find);
-  const objectPagination = paginationHelper(req.query, totalItems);
-  // ket thuc phan trang
-
   const productCategories = await ProductCategory.find(find).sort(sort);
 
   // hiển thị ra tree danh mục khi
@@ -80,7 +75,6 @@ module.exports.index = async (req, res) => {
     records: newRecords,
     filterStatus: filterStatus,
     keyword: objectSearch.keyword,
-    pagination: objectPagination,
   });
 };
 
