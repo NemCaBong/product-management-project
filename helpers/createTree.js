@@ -33,7 +33,7 @@ module.exports.tree = (arr, parentId = "") => {
 
 module.exports.displayLogs = async (categories) => {
   async function update(category) {
-    const updatedCategory = { ...category }; // Tạo một bản sao của category để thêm vào updatedCategories
+    const updatedCategory = category; // Tạo một bản sao của category để thêm vào updatedCategories
     // Cập nhật thông tin cho createdBy
     const createdByUser = await Account.findOne({
       _id: category.createdBy.account_id,

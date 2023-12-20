@@ -1,4 +1,5 @@
 include ./moment.pug
+
 mixin table-tree(records, level = 1)
   each item, index in records
     - const prefix = Array(level + 1).join('-- ')
@@ -44,31 +45,21 @@ mixin table-tree(records, level = 1)
               button-change-status
               class="badge badge-danger"
             ) Dừng hoạt động
-        else 
-          if(item.status == "active")
-            a(
-              href="javascript:;"
-              data-status=item.status
-              class="badge badge-success"
-            ) Hoạt động
-          else
-            a(
-              href="javascript:;"
-              data-status=item.status
-              class="badge badge-danger"
-            ) Dừng hoạt động
       td 
-        - const createdAt = item.createdBy.createdAt
-        if (createdAt)
-          p #{item.accountFullName}
-          p
-            +formatDateTime(createdAt)
+        if(item.createdBy)
+          - const createdAt = item.createdBy.createdAt
+          if (createdAt)
+            p #{item.accountFullName}
+            p
+              +formatDateTime(createdAt)
+  
       td
-        - const updatedBy = item.updatedBy.slice(-1)[0]
-        if(updatedBy)
-          p #{updatedBy.accountFullName}
-          p
-            +formatDateTime(updatedBy.updatedAt)
+        if (item.updatedBy)
+          - const updatedBy = item.updatedBy.slice(-1)[0]
+          if(updatedBy)
+            p #{updatedBy.accountFullName}
+            p
+              +formatDateTime(updatedBy.updatedAt)
       td
         a(
           href=`${prefixAdmin}/product-category/detail/${item.id}`

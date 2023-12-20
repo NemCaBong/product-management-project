@@ -5,7 +5,6 @@ module.exports.general = async (req, res) => {
   // lấy ra bản ghi đầu tiên trong collection.
   // và trong settingsGeneral cx chỉ có 1 bản ghi.
   const settingsGeneral = await SettingsGeneral.findOne({});
-  console.log(settingsGeneral);
   res.render("admin/pages/settings/general.pug", {
     pageTitle: "Cài đặt chung",
     settingsGeneral: settingsGeneral,
