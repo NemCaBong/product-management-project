@@ -158,6 +158,8 @@ module.exports.detail = async (req, res) => {
       roles: "Nhóm quyền",
       accounts: "Tài khoản",
       settings: "Cài đặt chung",
+      users: "Người dùng",
+      orders: "Đơn hàng",
     };
 
     let permissionsAct = {

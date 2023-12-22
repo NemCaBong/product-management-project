@@ -18,12 +18,15 @@ module.exports.cartId = async (req, res, next) => {
     const cart = await Cart.findOne({
       _id: req.cookies.cartID,
     });
-
-    cart.totalQuantity = cart.products.reduce(
-      (count, item) => count + item.quantity,
-      0
-    );
-    res.locals.miniCart = cart;
+    if (cart) {
+      cart.totalQuantity = cart.products.reduce(
+        (count, item) => count + item.quantity,
+        0
+      );
+      res.locals.miniCart = cart;
+    } else {
+      res.clearCookie("cartID");
+    }
   }
   next();
 };

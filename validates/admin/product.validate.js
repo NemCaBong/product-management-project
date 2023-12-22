@@ -4,7 +4,5 @@ module.exports.createPost = (req, res, next) => {
     res.redirect("back");
     return;
   }
-  // đây là 1 hàm để next sang bước kế tiếp
-  // => middleware kế tiếp
   next();
 };

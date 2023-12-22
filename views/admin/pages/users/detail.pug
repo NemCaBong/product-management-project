@@ -1,0 +1,40 @@
+extends ../../layouts/default.pug
+
+block main
+  if (role.permissions.includes("users_view"))
+    if (user.fullName)
+      h1(class="mb-4") #{user.fullName}
+
+    if (user.email)
+      div(class="mb-4") <b>#{user.email}</b>
+
+    if (user.avatar)
+      p Avatar: 
+      br
+      div(class="mb-4")
+        img(
+          src=user.avatar
+          style="width: 100px"
+        )
+
+    if (user.status)
+      div(class="mb-4")
+        span Trạng thái:
+        if (user.status === "active")
+          span(class="badge badge-success") Hoạt động
+        else
+          span(class="badge badge-danger") Dừng hoạt động
+
+    
+    if (user.friendList.length > 0)
+      div(class="mb-4") Bạn bè: 
+        ul 
+          each friend in user.friendList
+            li 
+              a(href=`${prefixAdmin}/users/detail/${friend.user_id}`) #{friend.fullName}
+    else 
+      p Bạn bè: Không có
+    a(
+      href=`${prefixAdmin}/users/edit/${user.id}`
+      class="btn btn-warning"
+    ) Chỉnh sửa

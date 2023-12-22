@@ -1,0 +1,17 @@
+extends ../../layouts/default.pug
+
+block main
+  if (role.permissions.includes("orders_view"))
+    h1 Thông tin đơn hàng
+    if (order.userInfo)
+      h4(class="mb-4") Người đặt: #{order.userInfo.fullName}
+      div(class="mb-4") Phone: #{order.userInfo.phone}
+      div(class="mb-4") Address: #{order.userInfo.address}
+
+    if (order.products)
+      h4 Sản phẩm trong đơn hàng:
+      ul 
+        each item in order.products
+          li #{item.title} * #{item.quantity}
+    
+      div(class="mb-4") Tổng tiền: #{order.totalPrice}$

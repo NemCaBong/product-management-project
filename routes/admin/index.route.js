@@ -7,6 +7,8 @@ const accountRoutes = require("./account.route");
 const authRoutes = require("./auth.route");
 const myAccountRoutes = require("./my-account.route");
 const settingRoutes = require("./setting.route");
+const userRoutes = require("./user.route");
+const orderRoutes = require("./order.route");
 // get system variables
 const systemConfig = require("../../config/system");
 // auth middleware
@@ -33,6 +35,8 @@ module.exports = (app) => {
     authMiddleware.requireAuth,
     myAccountRoutes
   );
+  app.use(PATH_ADMIN + "/users", authMiddleware.requireAuth, userRoutes);
+  app.use(PATH_ADMIN + "/orders", authMiddleware.requireAuth, orderRoutes);
 
   app.use(PATH_ADMIN + "/settings", authMiddleware.requireAuth, settingRoutes);
 

@@ -140,7 +140,58 @@ block main
           each item in records
             td(class="text-center")
               input(type="checkbox")
-        //- Tài khoản
+
+        //- Quản lý người dùng
+        tr
+          td(colspan="4")
+            b Người dùng
+        tr(data-name="users_view")
+          td Xem
+          each item in records
+            td(class="text-center")
+              input(type="checkbox")
+        tr(data-name="users_create")
+          td Thêm mới
+          each item in records
+            td(class="text-center")
+              input(type="checkbox")
+        tr(data-name="users_edit")
+          td Chỉnh sửa
+          each item in records
+            td(class="text-center")
+              input(type="checkbox")
+        tr(data-name="users_delete")
+          td Xóa
+          each item in records
+            td(class="text-center")
+              input(type="checkbox")
+    
+        //- Quản lý đơn hàng
+        tr
+          td(colspan="4")
+            b Đơn hàng
+        tr(data-name="orders_view")
+          td Xem
+          each item in records
+            td(class="text-center")
+              input(type="checkbox")
+        tr(data-name="orders_create")
+          td Thêm mới
+          each item in records
+            td(class="text-center")
+              input(type="checkbox")
+        tr(data-name="orders_edit")
+          td Chỉnh sửa
+          each item in records
+            td(class="text-center")
+              input(type="checkbox")
+        tr(data-name="orders_delete")
+          td Xóa
+          each item in records
+            td(class="text-center")
+              input(type="checkbox")
+
+        //- Cài đặt chung
         tr
           td(colspan="4")
             b Cài đặt chung

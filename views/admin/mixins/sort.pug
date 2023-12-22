@@ -15,3 +15,31 @@ mixin sort()
       class="btn btn-danger mt-2"
       sort-clear
     ) Clear
+
+mixin sortUsers()
+  div(sort)
+    select(
+      class="form-control"
+      name="sort"
+      sort-select
+    )
+      option(value="fullName-asc") Tên A - Z
+      option(value="fullName-desc") Tên Z - A
+    button(
+      class="btn btn-danger mt-2"
+      sort-clear
+    ) Clear
+
+mixin sortOrders()
+  div(sort)
+    select(
+      class="form-control"
+      name="sort"
+      sort-select
+    )
+      option(value="createdAt--1") Gần đây
+      option(value="createdAt-1") Xa nhất
+    button(
+      class="btn btn-danger mt-2"
+      sort-clear
+    ) Clear
